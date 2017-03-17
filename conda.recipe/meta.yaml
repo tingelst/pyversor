@@ -1,5 +1,5 @@
 package:
-  name: cmake_example
+  name: pyversor
   version: {{ environ.get('GIT_DESCRIBE_TAG', 'dev') }}
 
 build:
@@ -26,8 +26,8 @@ requirements:
 
 test:
   imports:
-    - cmake_example
+    - versor
 
 about:
-  summary: An example project built with pybind11.
+  summary: Python bindings for the Versor geometric algebra library.
   license_file: LICENSE
