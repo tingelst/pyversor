@@ -2,7 +2,8 @@ include README.md LICENSE
 global-include CMakeLists.txt *.cmake
 recursive-include src *
 recursive-include pybind11/include *.h
-recursive-include versor/include/vsr/detail *
-recursive-include versor/include/vsr/space *
-recursive-include versor/src/space *
+include pybind11/LICENSE
+recursive-include versor/include *.h
+recursive-include versor/src *.h
+recursive-include versor/copyrights *
 
