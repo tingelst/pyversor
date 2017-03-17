@@ -26,7 +26,7 @@ requirements:
 
 test:
   imports:
-    - versor
+    - pyversor
 
 about:
   summary: Python bindings for the Versor geometric algebra library.

@@ -37,8 +37,8 @@ void AddEGA(py::module &m);
 void AddReciprocalMotor(py::module &m);
   void AddE4(py::module &m);
 
-PYBIND11_PLUGIN(versor) {
-  py::module m("versor", "versor plugin");
+PYBIND11_PLUGIN(pyversor) {
+  py::module m("pyversor", "versor plugin");
   AddVector(m);
   // AddBivector(m);
   // AddRotor(m);
