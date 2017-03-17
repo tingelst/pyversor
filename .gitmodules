@@ -4,3 +4,4 @@
 [submodule "versor"]
 	path = versor
 	url = https://github.com/wolftype/versor.git
+	branch = windows
