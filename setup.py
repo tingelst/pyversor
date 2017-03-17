@@ -52,6 +52,10 @@ class CMakeBuild(build_ext):
             # if sys.maxsize > 2**32:
             #     cmake_args += ['-A', 'x64']
             # build_args += ['--', '/m']
+        if platform.system() == "Darwin":
+            cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
+            cmake_args += ['-DCMAKE_CXX_COMPILER=clang++']
+            cmake_args += ['-DCMAKE_C_COMPILER=clang']
         else:
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
             cmake_args += ['-DCMAKE_CXX_COMPILER=g++-5']
