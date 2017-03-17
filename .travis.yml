@@ -1,22 +1,22 @@
 language: cpp
 matrix:
   include:
-  # - os: linux
-  #   env: PYTHON=2.7
+  - os: linux
+    env: PYTHON=2.7
   - os: linux
     env: PYTHON=3.5
-  # - os: linux
-  #   env: CONDA=2.7
-  # - os: linux
-  #   env: CONDA=3.5
-  # - os: osx
-  #   env: PYTHON=2.7
-  # - os: osx
-  #   env: PYTHON=3.6
-  # - os: osx
-  #   env: CONDA=2.7
-  # - os: osx
-  #   env: CONDA=3.5
+  - os: linux
+    env: CONDA=2.7
+  - os: linux
+    env: CONDA=3.5
+  - os: osx
+    env: PYTHON=2.7
+  - os: osx
+    env: PYTHON=3.6
+  - os: osx
+    env: CONDA=2.7
+  - os: osx
+    env: CONDA=3.5
 addons:
   apt:
     sources:
