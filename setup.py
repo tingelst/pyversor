@@ -49,9 +49,9 @@ class CMakeBuild(build_ext):
                 '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(),
                                                                 extdir)
             ]
-            if sys.maxsize > 2**32:
-                cmake_args += ['-A', 'x64']
-            build_args += ['--', '/m']
+            # if sys.maxsize > 2**32:
+            #     cmake_args += ['-A', 'x64']
+            # build_args += ['--', '/m'# ]
         else:
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
             cmake_args += ['-DCMAKE_CXX_COMPILER=g++-5']
