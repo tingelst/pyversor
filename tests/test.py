@@ -1,2 +1,2 @@
-import versor as vsr
+import pyversor as vsr
 
