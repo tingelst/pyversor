@@ -39,7 +39,7 @@ PYBIND11_PLUGIN(pyversor) {
   AddPlane(m);
   AddCircle(m);
   AddSphere(m);
-  AddCGA(m);
+  // AddCGA(m);
   // AddEGA(m);
 
   return m.ptr();
