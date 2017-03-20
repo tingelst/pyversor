@@ -19,42 +19,39 @@ namespace vsr {
         .def("inv", [](Biv &arg){return !arg;})
         .def("duale", &Biv::duale)
         .def("unduale", &Biv::unduale)
-        // .def("unit", &Biv::unit)
-        // .def("rev", &Biv::reverse)
-        // .def("inv", &Biv::inverse)
-        // .def("spin", (Biv (Biv::*)(const Rot &) const) & Biv::spin)
-        // .def("exp", [](const Biv &biv) { return Gen::rotor(biv); })
-        // .def("__le__", [](const Biv &lhs, const Tri &rhs) { return lhs <= rhs; })
-        // .def("__le__",
-        //      [](const Biv &lhs, const Biv &rhs) { return (lhs <= rhs)[0]; })
-        // .def("__xor__", [](const Biv &lhs, const Vec &rhs) { return lhs ^ rhs; })
-        // .def("__add__",
-        //      [](const Biv &lhs, const Drv &rhs) { return Dll(lhs + rhs); })
-        // .def("__sub__", [](const Biv &lhs, const Biv &rhs) { return lhs - rhs; })
-        // .def("__add__", [](const Biv &lhs, const Biv &rhs) { return lhs + rhs; })
-        // .def("__mul__", [](const Biv &lhs, const Vec &rhs) { return lhs * rhs; })
-        // .def("__mul__", [](const Biv &lhs, const Biv &rhs) { return lhs * rhs; })
-        // .def("__mul__", [](const Biv &lhs, double rhs) { return lhs * rhs; })
-        // .def("__mul__", [](const Biv &lhs, const Rot &rhs) { return lhs * rhs; })
-        // .def("__div__", [](const Biv &lhs, double rhs) { return lhs / rhs; })
-        // .def("comm", [](const Biv &lhs,
-        //                 const Rot &rhs) { return (lhs * rhs - rhs * lhs) * 0.5; })
-        // .def("acomm",
-        //      [](const Biv &lhs, const Rot &rhs) {
-        //        return (lhs * rhs + rhs * lhs) * 0.5;
-        //      })
-        // .def("comm",
-        //      [](const Biv &lhs, const Vec &rhs) {
-        //        return Vec(lhs * rhs - rhs * lhs) * 0.5;
-        //      })
-        // .def("comm",
-        //      [](const Biv &lhs, const Biv &rhs) {
-        //        return Biv(lhs * rhs - rhs * lhs) * 0.5;
-        //      })
-        // .def("acomm",
-        //      [](const Biv &lhs, const Vec &rhs) {
-        //        return Vec(lhs * rhs + rhs * lhs) * 0.5;
-        //      })
+        .def("spin", (Biv (Biv::*)(const Rot &) const) & Biv::spin)
+        .def("exp", [](const Biv &biv) { return Gen::rotor(biv); })
+        .def("__le__", [](const Biv &lhs, const Tri &rhs) { return lhs <= rhs; })
+        .def("__le__",
+             [](const Biv &lhs, const Biv &rhs) { return (lhs <= rhs)[0]; })
+        .def("__xor__", [](const Biv &lhs, const Vec &rhs) { return lhs ^ rhs; })
+        .def("__add__",
+             [](const Biv &lhs, const Drv &rhs) { return Dll(lhs + rhs); })
+        .def("__sub__", [](const Biv &lhs, const Biv &rhs) { return lhs - rhs; })
+        .def("__add__", [](const Biv &lhs, const Biv &rhs) { return lhs + rhs; })
+        .def("__mul__", [](const Biv &lhs, const Vec &rhs) { return lhs * rhs; })
+        .def("__mul__", [](const Biv &lhs, const Biv &rhs) { return lhs * rhs; })
+        .def("__mul__", [](const Biv &lhs, double rhs) { return lhs * rhs; })
+        .def("__mul__", [](const Biv &lhs, const Rot &rhs) { return lhs * rhs; })
+        .def("__div__", [](const Biv &lhs, double rhs) { return lhs / rhs; })
+        .def("comm", [](const Biv &lhs,
+                        const Rot &rhs) { return (lhs * rhs - rhs * lhs) * 0.5; })
+        .def("acomm",
+             [](const Biv &lhs, const Rot &rhs) {
+               return (lhs * rhs + rhs * lhs) * 0.5;
+             })
+        .def("comm",
+             [](const Biv &lhs, const Vec &rhs) {
+               return Vec(lhs * rhs - rhs * lhs) * 0.5;
+             })
+        .def("comm",
+             [](const Biv &lhs, const Biv &rhs) {
+               return Biv(lhs * rhs - rhs * lhs) * 0.5;
+             })
+        .def("acomm",
+             [](const Biv &lhs, const Vec &rhs) {
+               return Vec(lhs * rhs + rhs * lhs) * 0.5;
+             })
         .def("__repr__",
              [](const Biv &arg) {
                std::stringstream ss;
