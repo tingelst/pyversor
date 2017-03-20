@@ -18,7 +18,7 @@ file(GLOB core versor/src/space/*.cpp)
 pybind11_add_module(pyversor
   src/versor_pybind11.cpp
   src/versor_vector_pybind11.cpp
-  # src/versor_bivector_pybind11.cpp
+  src/versor_bivector_pybind11.cpp
   # src/versor_rotor_pybind11.cpp
   ${core}
 )

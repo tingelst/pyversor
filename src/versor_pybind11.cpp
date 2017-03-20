@@ -1,7 +1,4 @@
-#include <pybind11/pybind11.h>
-#include <pybind11/operators.h>
-#include "vsr_cga3D_op.h"
-#include "vsr_cga3D_types.h"
+#include <pyversor/pyversor.h>
 
 namespace vsr {
 
@@ -40,7 +37,7 @@ void AddReciprocalMotor(py::module &m);
 PYBIND11_PLUGIN(pyversor) {
   py::module m("pyversor", "versor plugin");
   AddVector(m);
-  // AddBivector(m);
+  AddBivector(m);
   // AddRotor(m);
   // AddPoint(m);
   // AddLine(m);
