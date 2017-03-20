@@ -12,5 +12,5 @@ Python bindings for the [Versor](https://github.com/wolftype/versor) geometric a
 
 ## Supported compilers
 1. Clang/LLVM 3.3 or newer
-2. GCC 5 (GCC 6 are not supported)
+2. GCC 5 (GCC 6 is not supported)
 3. VS2017
