@@ -20,6 +20,7 @@ void AddMotor(py::module &m);
 void AddDualPlane(py::module &m);
 void AddPlane(py::module &m);
 void AddCircle(py::module &m);
+void AddPointPair(py::module &m);
 void AddSphere(py::module &m);
 void AddTrivector(py::module &m);
 void AddCGA(py::module &m);
@@ -38,13 +39,14 @@ PYBIND11_PLUGIN(pyversor) {
   AddDualPlane(m);
   AddPlane(m);
   AddCircle(m);
+  AddPointPair(m);
   AddSphere(m);
-  // AddCGA(m);
-  // AddEGA(m);
+  AddCGA(m);
+  AddEGA(m);
 
   return m.ptr();
 }
 
-}  // namespace python
+} // namespace python
 
-}  // namespace vsr
+} // namespace vsr

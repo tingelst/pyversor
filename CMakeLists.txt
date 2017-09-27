@@ -28,8 +28,9 @@ pybind11_add_module(pyversor
   src/versor_dual_plane_pybind11.cpp
   src/versor_plane_pybind11.cpp
   src/versor_circle_pybind11.cpp
+  src/versor_point_pair_pybind11.cpp
   src/versor_sphere_pybind11.cpp
-  # src/versor_conformal_geometric_algebra_pybind11.cpp
-  # src/versor_euclidean_geometric_algebra_pybind11.cpp
+  src/versor_conformal_geometric_algebra_pybind11.cpp
+  src/versor_euclidean_geometric_algebra_pybind11.cpp
   ${core}
 )
