@@ -61,6 +61,7 @@ namespace vsr {
         .def("__le__", [](const Vec &lhs, const Biv &rhs) { return lhs <= rhs; })
         .def("spin", (Vec (Vec::*)(const Rot &) const) & Vec::spin)
         .def("null", &Vec::null)
+        .def("print", &Vec::print)
         .def("__repr__",
              [](const Vec &arg) {
                std::stringstream ss;

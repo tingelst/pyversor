@@ -7,6 +7,19 @@ namespace python {
 namespace py = pybind11;
 using namespace vsr::cga;
 
+template <typename T>
+py::class_<T> add(py::module &m, const std::string &type_name) {
+  auto t = py::class_<T>(m, type_name, py::buffer_protocol());
+  t.def("dual", &T::dual);
+  t.def("__getitem__", [](Par &arg, int idx) { return arg[idx]; });
+  t.def("__setitem__", [](Par &arg, int idx, double val) { arg[idx] = val; });
+  t.def_buffer([](T &arg) {
+    return py::buffer_info(
+        &arg.val[0], sizeof(double), py::format_descriptor<double>::format(), 1,
+        {static_cast<unsigned long>(arg.Num)}, {sizeof(double)});
+  });
+}
+
 void AddPointPair(py::module &m) {
   py::class_<Par>(m, "Par", py::buffer_protocol())
       .def(py::init<double, double, double, double, double, double, double,
@@ -46,6 +59,7 @@ void AddPointPair(py::module &m) {
       .def("comm", [](const Par &lhs,
                       const Par &rhs) { return (lhs * rhs - rhs * lhs) * 0.5; })
       .def("pnt", [](const Par &self) { return Round::location(self); })
+        .def("print", &Par::print)
       .def("radius", [](const Par &self) { return Round::radius(self); })
       .def("pln", [](const Par &self) { return Round::carrier(self); })
       .def("surround", [](const Par &self) { return Round::surround(self); })

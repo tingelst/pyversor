@@ -26,25 +26,28 @@ void AddTrivector(py::module &m);
 void AddCGA(py::module &m);
 void AddEGA(py::module &m);
 
-PYBIND11_PLUGIN(pyversor) {
-  py::module m("pyversor", "versor plugin");
-  AddVector(m);
-  AddBivector(m);
-  AddRotor(m);
-  AddPoint(m);
-  AddLine(m);
-  AddDualLine(m);
-  AddTranslator(m);
-  AddMotor(m);
-  AddDualPlane(m);
-  AddPlane(m);
-  AddCircle(m);
-  AddPointPair(m);
-  AddSphere(m);
-  AddCGA(m);
-  AddEGA(m);
+template <typename A, typename B>
+void inner(const A &a, const B& b) { 
+  return a <= b;
+}
 
-  return m.ptr();
+PYBIND11_MODULE(pyversor, m) {
+  // AddVector(m);
+  // AddBivector(m);
+  // AddRotor(m);
+  // AddPoint(m);
+  // AddLine(m);
+  // AddDualLine(m);
+  // AddTranslator(m);
+  // AddMotor(m);
+  // AddDualPlane(m);
+  // AddPlane(m);
+  // AddCircle(m);
+  // AddPointPair(m);
+  // AddSphere(m);
+  // AddCGA(m);
+  // AddEGA(m);
+  add<Trv>(m, "Trv").def(py::init<double, double, double, double>());
 }
 
 } // namespace python
