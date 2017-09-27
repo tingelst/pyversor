@@ -23,6 +23,7 @@ void AddCircle(py::module &m) {
       .def("norm", &Cir::norm)
       .def("rnorm", &Cir::rnorm)
       .def("unit", &Cir::unit)
+      .def("__le__", [](const Cir &lhs, const Cir &rhs) { return (lhs <= rhs)[0]; })
       .def("rev", [](Cir &arg) { return ~arg; })
       .def("inv", [](Cir &arg) { return !arg; })
       .def("dual", &Cir::dual)
