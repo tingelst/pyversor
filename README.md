@@ -7,8 +7,8 @@ Python bindings for the [Versor](https://github.com/wolftype/versor) geometric a
 ### Conda
 ```conda install -c tingelst pyversor```
 
-### From source
-```python setup.py install```
+### From source in develop mode
+```pip install -e .```
 
 ## Supported compilers
 1. Clang/LLVM 3.3 or newer
