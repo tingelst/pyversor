@@ -1,47 +1,40 @@
-/*
- * =====================================================================================
- *
- *       Filename:  vsr_xlists.h
- *
- *    Description:  compile-time list processing: basis blade lists, concatenation, execution lists, 
-                    reduction of lists to return types, 
-                    and finding and indexing 
- *
- *        Version:  1.0
- *        Created:  03/10/2014 12:16:51
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Pablo Colapinto (), gmail -> wolftype
- *   Organization:  wolftype 
- *
- * =====================================================================================
- */
+// Versor Geometric Algebra Library
+// Copyright (c) 2017 Lars Tingelstad
+// Copyright (c) 2010 Pablo Colapinto
+// All rights reserved.
 
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 
-/*! @file 
-    
-     Compile-time list processing basics (see also vsr_lisp.h)
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
 
- *  VERSOR
- *
- *  Author: Pablo Colapinto
- *  Gmail:  wolftype
- *  homepage: versor.mat.ucsb.edu
- *
- * */
- 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-
-#ifndef LISTS_H_INCLUDED
-#define LISTS_H_INCLUDED
+// The views and conclusions contained in the software and documentation are
+// those of the authors and should not be interpreted as representing official
+// policies, either expressed or implied, of the FreeBSD Project.
+#pragma once 
 
 #include <stdio.h> 
 #include <bitset> 
 #include <iostream>
 
-#include "vsr_basis.h"
-#include "vsr_instructions.h"
+#include <versor/detail/basis.h>
+#include <versor/detail/instructions.h>
   
 using namespace std;
 
@@ -659,6 +652,3 @@ struct VPrint {
 
 
 } //vsr::
-
-#endif
-

@@ -1,24 +1,42 @@
+// Versor Geometric Algebra Library
+// Copyright (c) 2017 Lars Tingelstad
+// Copyright (c) 2010 Pablo Colapinto
+// All rights reserved.
 
-/*!
- *  @file
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 
-    Common Operations Specific to CGA3D
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
 
- *-----------------------------------------------------------------------------*/
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
-
-#ifndef CGA3D_OPERATIONS_H_INCLUDED
-#define CGA3D_OPERATIONS_H_INCLUDED
+// The views and conclusions contained in the software and documentation are
+// those of the authors and should not be interpreted as representing official
+// policies, either expressed or implied, of the FreeBSD Project.
+#pragma once 
 
 #include <math.h>
 #include <vector>
 
-#include "vsr_cga3D_types.h"
-#include "vsr_cga3D_round.h"
+#include <versor/space/cga3D_types.h>
+#include <versor/space/cga3D_round.h>
 
-#include "detail/vsr_generic_op.h"
-#include "util/vsr_constants.h"
-#include "util/vsr_math.h"
+#include <versor/detail/generic_op.h>
+#include <versor/util/util.h>
 
 namespace vsr{ namespace cga{
 
@@ -659,38 +677,3 @@ Multivector<Algebra,B> Multivector<Algebra,B>::twist( const Multivector<Algebra,
 /**  @} */
 
 }    //vsr::
-
-#endif
-
-
-//  template<bool _a, bool _b>
-//  struct meet_impl{
-//    template<class A, class B>
-//    auto operator()(const A& a, const B& b) RETURNS
-//    ( (a^b).dual() )
-//  };
-
-
-//     namespace topo{
-//
-//
-//
-//       /*!
-//        *  \brief spin product in range [0,RANGE) of some type t and some bivector generator p
-//        */
-//      template<class T, class G>
-//      vector<T> spin( const T& s, const G& p, int num, float range=PI){
-//        vector<T> res;
-//        for (int i=0;i<num;++i){
-//          float t=range*(float)i/num;
-//          res.push_back( s.spin( gen(p*t) ) ) ;
-//        }
-//        return res;
-//      }
-//
-//
-//
-//    } //topo::
-
-
-//} //cga::
