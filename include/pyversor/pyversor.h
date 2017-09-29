@@ -28,8 +28,9 @@
 
 #pragma once
 
-#include <pybind11/pybind11.h>
+#include <pybind11/iostream.h>
 #include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 #include "vsr_cga3D_op.h"
@@ -40,15 +41,21 @@ namespace py = pybind11;
 template <typename T>
 py::class_<T> add(py::module &m, const std::string &name) {
   auto t = py::class_<T>(m, name.c_str(), py::buffer_protocol());
-  t.def_property_readonly_static("type", [name]() { return name; });
+  t.def(py::init([](py::buffer b) {
+    py::buffer_info info = b.request();
+    auto v = new T();
+    memcpy(v, info.ptr, sizeof(double) * v->Num);
+    return v;
+  }));
   t.def("__neg__", [](const T &arg) { return -arg; });
   t.def("__mul__", [](const T &lhs, double rhs) { return lhs * rhs; });
   t.def("__rmul__", [](const T &lhs, double rhs) { return lhs * rhs; });
+  t.def("__imul__", [](T &lhs, double rhs) { return lhs *= rhs; });
   t.def("__add__", [](const T &lhs, const T &rhs) { return lhs + rhs; });
+  t.def("__add__", [](const T &lhs, double rhs) { return lhs + rhs; });
   t.def("__sub__", [](const T &lhs, const T &rhs) { return lhs - rhs; });
-  t.def("__xor__", [](const T &lhs, const T &rhs) { return lhs ^ rhs; }, "Outer product");
-  t.def("__le__", [](const T &lhs, const T &rhs) { return lhs <= rhs; },
-        "Left contraction inner product");
+  t.def("__xor__", [](const T &lhs, const T &rhs) { return lhs ^ rhs; });
+  t.def("__le__", [](const T &lhs, const T &rhs) { return lhs <= rhs; });
   t.def("dual", &T::dual);
   t.def("duale", &T::duale);
   t.def("undual", &T::undual);

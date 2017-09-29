@@ -47,6 +47,10 @@ PYBIND11_MODULE(pyversor, m) {
   // AddSphere(m);
   // AddCGA(m);
   // AddEGA(m);
+
+  add<Vec>(m, "Vec").def(py::init<double, double, double>());
+  add<Biv>(m, "Biv").def(py::init<double, double, double>());
+  add<Rot>(m, "Rot").def(py::init<double, double, double, double>());
   add<Trv>(m, "Trv").def(py::init<double, double, double, double>());
 }
 
