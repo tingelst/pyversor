@@ -17,7 +17,8 @@
 
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE
 // DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
 // FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 // DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
@@ -38,6 +39,14 @@
 
 namespace py = pybind11;
 
+using cga_t = vsr::algebra<vsr::metric<4, 1, true>, double>;
+using grade_0 = cga_t::make_grade<0>;
+using grade_1 = cga_t::make_grade<1>;
+using grade_2 = cga_t::make_grade<2>;
+using grade_3 = cga_t::make_grade<3>;
+using grade_4 = cga_t::make_grade<4>;
+using grade_5 = cga_t::make_grade<5>;
+
 template <typename T>
 py::class_<T> add(py::module &m, const std::string &name) {
   auto t = py::class_<T>(m, name.c_str(), py::buffer_protocol());
@@ -47,12 +56,30 @@ py::class_<T> add(py::module &m, const std::string &name) {
     memcpy(v, info.ptr, sizeof(double) * v->Num);
     return v;
   }));
+  t.def("grade", [](const T &arg, int grade) {
+    switch (grade) {
+      case 0:
+        return T(grade_0(arg));
+      case 1:
+        return T(grade_1(arg));
+      case 2:
+        return T(grade_2(arg));
+      case 3:
+        return T(grade_3(arg));
+      case 4:
+        return T(grade_4(arg));
+      case 5:
+        return T(grade_5(arg));
+      default:
+        throw std::invalid_argument("Can only project onto grades 0 to 5.");
+    };
+  });
   t.def("__neg__", [](const T &arg) { return -arg; });
   t.def("__mul__", [](const T &lhs, double rhs) { return lhs * rhs; });
   t.def("__rmul__", [](const T &lhs, double rhs) { return lhs * rhs; });
   t.def("__imul__", [](T &lhs, double rhs) { return lhs *= rhs; });
   t.def("__add__", [](const T &lhs, const T &rhs) { return lhs + rhs; });
-  t.def("__add__", [](const T &lhs, double rhs) { return lhs + rhs; });
+  t.def("__radd__", [](const T &lhs, double rhs) { return lhs + rhs; });
   t.def("__sub__", [](const T &lhs, const T &rhs) { return lhs - rhs; });
   t.def("__xor__", [](const T &lhs, const T &rhs) { return lhs ^ rhs; });
   t.def("__le__", [](const T &lhs, const T &rhs) { return lhs <= rhs; });
@@ -72,12 +99,10 @@ py::class_<T> add(py::module &m, const std::string &name) {
     ss << arg[arg.Num - 1] << "])";
     return ss.str();
   });
-  t.def_buffer(
-      [](T &arg) {
-        return py::buffer_info(&arg.val[0], sizeof(double),
-                               py::format_descriptor<double>::format(), 1,
-                               {static_cast<unsigned long>(arg.Num)},
-                               {sizeof(double)});
-      });
+  t.def_buffer([](T &arg) {
+    return py::buffer_info(
+        &arg.val[0], sizeof(double), py::format_descriptor<double>::format(), 1,
+        {static_cast<unsigned long>(arg.Num)}, {sizeof(double)});
+  });
   return t;
 }
