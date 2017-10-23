@@ -26,6 +26,11 @@ b = cga.Vector(*rnd.randn(5))
 c = cga.Vector(*rnd.randn(5))
 
 
+m = cga.generate.exp(cga.DualLine(*rnd.randn(6)))
+print(a)
+print(a.spin(m))
+
+
 print(cga.construct.meet(a,b))
 
 m = MatrixTransform()

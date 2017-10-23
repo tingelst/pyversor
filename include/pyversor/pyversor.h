@@ -98,6 +98,7 @@ void add_multivector(py::module &m);
 void add_round(py::module &m);
 void add_flat(py::module &m);
 void add_construct(py::module &m);
+void add_generate(py::module &m);
 
 } // namespace cga
 

@@ -19,6 +19,7 @@ void add_submodule(py::module &m) {
   add_round(cga);
   add_flat(cga);
   add_construct(cga);
+  add_generate(cga);
 }
 
 void add_vector(py::module &m) {
@@ -108,6 +109,13 @@ void add_construct(py::module &m) {
   construct.def("meet", [](const cga::vector_t &p, const cga::vector_t &q) {
     return Construct::meet(p, q);
   });
+}
+
+void add_generate(py::module &m) {
+  using vsr::cga::Gen;
+  auto generate = m.def_submodule("generate");
+  generate.def("log", [](const cga::motor_t &m) { return Gen::log(m); });
+  generate.def("exp", [](const cga::dual_line_t &b) { return Gen::mot(b); });
 }
 
 } // namespace cga
