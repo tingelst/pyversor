@@ -35,6 +35,7 @@
 #include <pybind11/stl.h>
 
 #include <versor/space/cga3D_op.h>
+#include <versor/space/cga3D_round.h>
 #include <versor/space/cga3D_types.h>
 
 namespace pyversor {
@@ -66,13 +67,18 @@ namespace cga {
 
 using scalar_t = cga_t::make_grade<0>;
 using vector_t = cga_t::make_grade<1>;
+using point_t = vector_t;
+using dual_sphere_t = vector_t;
 using bivector_t = cga_t::make_grade<2>;
 using trivector_t = cga_t::make_grade<3>;
 using quadvector_t = cga_t::make_grade<4>;
+using sphere_t = quadvector_t;
 using pseudoscalar_t = cga_t::make_grade<5>;
 using motor_t = vsr::cga::Mot;
-using screw_t = vsr::cga::Dll;
-
+using dual_line_t = vsr::cga::Dll;
+using line_t = vsr::cga::Lin;
+using dual_plane_t = vsr::cga::Dlp;
+using plane_t = vsr::cga::Pln;
 using multivector_t =
     vsr::Multivector<cga_t, vsr::Basis<0, 1, 2, 4, 8, 16, 3, 5, 6, 9, 10, 12,
                                        17, 18, 20, 24, 7, 11, 13, 14, 19, 21,
@@ -84,20 +90,22 @@ void add_bivector(py::module &m);
 void add_trivector(py::module &m);
 void add_quadvector(py::module &m);
 void add_motor(py::module &m);
-void add_screw(py::module &m);
+void add_dual_line(py::module &m);
+void add_line(py::module &m);
+void add_dual_plane(py::module &m);
+void add_plane(py::module &m);
 void add_multivector(py::module &m);
+void add_round(py::module &m);
+void add_flat(py::module &m);
+void add_construct(py::module &m);
 
 } // namespace cga
 
 template <typename T>
 py::class_<T> add_multivector(py::module &m, const std::string &name) {
   auto t = py::class_<T>(m, name.c_str(), py::buffer_protocol());
-  t.def(py::init([](py::buffer b) {
-    py::buffer_info info = b.request();
-    auto v = new T();
-    memcpy(v, info.ptr, sizeof(double) * v->Num);
-    return v;
-  }));
+  t.def(py::init<const ega::multivector_t &>());
+  t.def(py::init<const cga::multivector_t &>());
   t.def("__neg__", [](const T &arg) { return -arg; });
   t.def("__mul__", [](const T &lhs, double rhs) { return lhs * rhs; });
   t.def("__rmul__", [](const T &lhs, double rhs) { return lhs * rhs; });
@@ -174,8 +182,8 @@ py::class_<T> add_conformal_multivector(py::module &m,
       throw std::invalid_argument("Can only project onto grades 0 to 3.");
     };
   });
-  t.def("dual", &T::duale);
-  t.def("undual", &T::unduale);
+  t.def("dual", &T::dual);
+  t.def("undual", &T::undual);
   return t;
 }
 

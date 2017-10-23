@@ -10,6 +10,7 @@ void add_submodule(py::module &m) {
   add_bivector(ega);
   add_trivector(ega);
   add_rotator(ega);
+  add_multivector(ega);
 }
 
 void add_vector(py::module &m) {
@@ -33,7 +34,10 @@ void add_rotator(py::module &m) {
 }
 
 void add_multivector(py::module &m) {
-  add_euclidean_multivector<multivector_t>(m, "Multivector").def(py::init<>());
+  add_euclidean_multivector<multivector_t>(m, "Multivector")
+      .def(py::init<>())
+      .def(py::init<double, double, double, double, double, double, double,
+                    double>());
 }
 
 } // namespace ega

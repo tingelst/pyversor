@@ -19,9 +19,9 @@ add_library(versor SHARED
   src/vsr_cga3D_round.cpp
 )
 
-pybind11_add_module(pyversor
+pybind11_add_module(pyversor_
   src/pyversor.cpp
   src/pyversor_ega.cpp
   src/pyversor_cga.cpp
 )
-target_link_libraries(pyversor PRIVATE versor)
+target_link_libraries(pyversor_ PRIVATE versor)

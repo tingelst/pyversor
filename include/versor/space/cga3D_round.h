@@ -65,7 +65,7 @@ struct Round {
   static Point null(VSR_PRECISION x, VSR_PRECISION y, VSR_PRECISION z);
 
   /*! Null Point from Coordinates
-  */
+   */
   static Point point(VSR_PRECISION x, VSR_PRECISION y, VSR_PRECISION z);
   ///@}
 
@@ -196,19 +196,19 @@ struct Round {
   static VSR_PRECISION dsize(const Point &dls);
 
   /*! Radius of DualSphere
-  */
+   */
   static VSR_PRECISION radius(const DualSphere &s);
 
   /*! Radius of Pair
-  */
+   */
   static VSR_PRECISION radius(const Pair &s);
 
   /*! Radius of Circle
-  */
+   */
   static VSR_PRECISION radius(const Circle &s);
 
   /*! Radius ofSphere
-  */
+   */
   static VSR_PRECISION radius(const Sphere &s);
 
   template <class T> static VSR_PRECISION rad(const T &t) { return radius(t); }
@@ -237,7 +237,7 @@ struct Round {
   static VSR_PRECISION squaredDistance(const Point &a, const Point b);
 
   /*! Squared distance between two points
-  */
+   */
   static VSR_PRECISION sqd(const Point &a, const Point b) {
     return squaredDistance(a, b);
   }
@@ -273,7 +273,7 @@ struct Round {
 
   /*!
    * Split A Circle into its dual point pair poles
-  */
+   */
   static std::vector<Point> split(const Circle &nc) { return split(nc.dual()); }
   ///@}
 
@@ -335,6 +335,7 @@ struct Round {
     auto tmp = (-direction(x)).copy<Vec>().unit().copy<Tnv>();
     return Pair(tmp).translate(Round::location(x));
   };
+
   static Circle renormalize(const Circle &x) {
     auto tmp = (direction(x)).copy<Biv>().runit().copy<Tnb>();
     return Circle(tmp).translate(Round::location(x));
@@ -479,7 +480,7 @@ struct Round {
   static Point point(const Circle &c, VSR_PRECISION t);
 
   /*! Theta in radians of point on circle relative to origin
-  */
+   */
   static VSR_PRECISION theta(const Circle &circle, const Point &point);
 };
 
@@ -639,5 +640,5 @@ struct Tangent {
    */
   static VSR_PRECISION wt(const TangentTrivector &s);
 };
-}
-} // vsr::cga::
+} // namespace cga
+} // namespace vsr
