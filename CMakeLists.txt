@@ -20,21 +20,8 @@ add_library(versor SHARED
 )
 
 pybind11_add_module(pyversor
-  src/versor_pybind11.cpp
-  src/versor_vector_pybind11.cpp
-  src/versor_bivector_pybind11.cpp
-  src/versor_rotor_pybind11.cpp
-  #src/versor_point_pybind11.cpp
-  #src/versor_line_pybind11.cpp
-  #src/versor_dual_line_pybind11.cpp
-  #src/versor_translator_pybind11.cpp
-  #src/versor_motor_pybind11.cpp
-  #src/versor_dual_plane_pybind11.cpp
-  #src/versor_plane_pybind11.cpp
-  #src/versor_circle_pybind11.cpp
-  #src/versor_point_pair_pybind11.cpp
-  #src/versor_sphere_pybind11.cpp
-  #src/versor_conformal_geometric_algebra_pybind11.cpp
-  #src/versor_euclidean_geometric_algebra_pybind11.cpp
+  src/pyversor.cpp
+  src/pyversor_ega.cpp
+  src/pyversor_cga.cpp
 )
 target_link_libraries(pyversor PRIVATE versor)
