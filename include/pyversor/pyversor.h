@@ -37,7 +37,24 @@
 #include <versor/space/cga3D_op.h>
 #include <versor/space/cga3D_types.h>
 
+namespace pyversor {
+
 namespace py = pybind11;
+
+namespace ega {
+using scalar_t = vsr::NESca<3>;
+using vector_t = vsr::NEVec<3>;
+using bivector_t = vsr::NEBiv<3>;
+using trivector_t = vsr::NETri<3>;
+using rotator_t = vsr::NERot<3>;
+
+// using ega_t = vsr::algebra<vsr::metric<3, 0, false>, double>;
+// using scalar_t = ega_t::make_grade<0>;
+// using vector_t = ega_t::make_grade<1>;
+// using bivector_t = ega_t::make_grade<2>;
+// using trivector_t = ega_t::make_grade<3>;
+// using rotator_t = ega_t::make_sum<bivector_t, scalar_t>;
+}
 
 using cga_t = vsr::algebra<vsr::metric<4, 1, true>, double>;
 using grade_0 = cga_t::make_grade<0>;
@@ -106,3 +123,4 @@ py::class_<T> add(py::module &m, const std::string &name) {
   });
   return t;
 }
+}  // namespace pyversor

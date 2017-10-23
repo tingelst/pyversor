@@ -27,7 +27,7 @@ void AddCGA(py::module &m);
 void AddEGA(py::module &m);
 
 template <typename A, typename B>
-void inner(const A &a, const B& b) { 
+void inner(const A &a, const B &b) {
   return a <= b;
 }
 
@@ -48,12 +48,24 @@ PYBIND11_MODULE(pyversor, m) {
   // AddCGA(m);
   // AddEGA(m);
 
-  add<Vec>(m, "Vec").def(py::init<double, double, double>());
-  add<Biv>(m, "Biv").def(py::init<double, double, double>());
-  add<Rot>(m, "Rot").def(py::init<double, double, double, double>());
-  add<Trv>(m, "Trv").def(py::init<double, double, double, double>());
+  // add<Vec>(m, "Vec").def(py::init<double, double, double>());
+  // add<Biv>(m, "Biv").def(py::init<double, double, double>());
+  // add<Rot>(m, "Rot").def(py::init<double, double, double, double>());
+  pyversor::add<Trv>(m, "Trv").def(py::init<double, double, double, double>());
+
+  auto cga = m.def_submodule("cga");
+  pyversor::add<Pnt>(cga, "Vec")
+      .def(py::init<double, double, double, double, double>());
+
+  auto ega = m.def_submodule("ega");
+  pyversor::add<pyversor::ega::vector_t>(ega, "Vector")
+      .def(py::init<double, double, double>());
+  pyversor::add<pyversor::ega::bivector_t>(ega, "Bivector")
+      .def(py::init<double, double, double>());
+  pyversor::add<pyversor::ega::rotator_t>(ega, "Rotator")
+      .def(py::init<double, double, double, double>());
 }
 
-} // namespace python
+}  // namespace python
 
-} // namespace vsr
+}  // namespace vsr
