@@ -70,7 +70,9 @@ using vector_t = cga_t::make_grade<1>;
 using point_t = vector_t;
 using dual_sphere_t = vector_t;
 using bivector_t = cga_t::make_grade<2>;
+using point_pair_t = bivector_t;
 using trivector_t = cga_t::make_grade<3>;
+using circle_t = trivector_t;
 using quadvector_t = cga_t::make_grade<4>;
 using sphere_t = quadvector_t;
 using pseudoscalar_t = cga_t::make_grade<5>;
@@ -99,6 +101,7 @@ void add_round(py::module &m);
 void add_flat(py::module &m);
 void add_construct(py::module &m);
 void add_generate(py::module &m);
+void add_operate(py::module &m);
 
 } // namespace cga
 
@@ -107,19 +110,39 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
   auto t = py::class_<T>(m, name.c_str(), py::buffer_protocol());
   t.def(py::init<const ega::multivector_t &>());
   t.def(py::init<const cga::multivector_t &>());
+  // negate
   t.def("__neg__", [](const T &arg) { return -arg; });
+  // geometric product
+  t.def("__mul__", [](const T &lhs, const T &rhs) { return lhs * rhs; });
   t.def("__mul__", [](const T &lhs, double rhs) { return lhs * rhs; });
   t.def("__rmul__", [](const T &lhs, double rhs) { return lhs * rhs; });
   t.def("__imul__", [](T &lhs, double rhs) { return lhs *= rhs; });
+  // addition
   t.def("__add__", [](const T &lhs, const T &rhs) { return lhs + rhs; });
+  t.def("__add__", [](const T &lhs, double rhs) { return lhs + rhs; });
   t.def("__radd__", [](const T &lhs, double rhs) { return lhs + rhs; });
+  // subtraction
   t.def("__sub__", [](const T &lhs, const T &rhs) { return lhs - rhs; });
+  t.def("__sub__", [](const T &lhs, double rhs) { return lhs + (rhs * -1.0); });
+  t.def("__rsub__",
+        [](const T &lhs, double rhs) { return lhs + (rhs * -1.0); });
+  // outer product
+  t.def("outer", [](const T &lhs, const T &rhs) { return lhs ^ rhs; });
+  t.def("outer", [](const T &lhs, double rhs) { return lhs * rhs; });
   t.def("__xor__", [](const T &lhs, const T &rhs) { return lhs ^ rhs; });
+  t.def("__xor__", [](const T &lhs, double rhs) { return lhs * rhs; });
+  t.def("__rxor__", [](const T &lhs, double rhs) { return lhs * rhs; });
+  // inner product
+  t.def("inner", [](const T &lhs, const T &rhs) { return lhs <= rhs; });
   t.def("__le__", [](const T &lhs, const T &rhs) { return lhs <= rhs; });
+  // Sandwich product
   t.def("spin", (T(T::*)(const ega::rotator_t &) const) & T::spin);
   t.def("spin", (T(T::*)(const cga::motor_t &) const) & T::spin);
+  // Get scalar coefficient
   t.def("__getitem__", [](T &arg, int idx) { return arg[idx]; });
+  // Set scalar coefficient
   t.def("__setitem__", [](T &arg, int idx, double val) { arg[idx] = val; });
+  // Representation string
   t.def("__repr__", [name](const T &arg) {
     std::stringstream ss;
     ss.precision(4);
@@ -135,6 +158,25 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
         &arg.val[0], sizeof(double), py::format_descriptor<double>::format(), 1,
         {static_cast<unsigned long>(arg.Num)}, {sizeof(double)});
   });
+  t.def(py::pickle(
+      [](const T &p) { // __getstate__
+        /* Return a tuple that fully encodes the state of the object */
+        std::vector<double> coeffs;
+        for (size_t i = 0; i < T::Num; ++i) {
+          coeffs.push_back(p[i]);
+        }
+        return coeffs;
+      },
+      [](const std::vector<double> &coeffs) { // __setstate__
+        if (coeffs.size() != T::Num)
+          throw std::runtime_error("Invalid state!");
+        /* Create a new C++ instance */
+        T p;
+        for (size_t i = 0; i < T::Num; ++i) {
+          p[i] = coeffs[i];
+        }
+        return p;
+      }));
   return t;
 }
 
@@ -180,7 +222,7 @@ py::class_<T> add_conformal_multivector(py::module &m,
     case 5:
       return T(cga::pseudoscalar_t(arg));
     default:
-      throw std::invalid_argument("Can only project onto grades 0 to 3.");
+      throw std::invalid_argument("Can only project onto grades 0 to 5.");
     };
   });
   t.def("dual", &T::dual);

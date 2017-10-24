@@ -15,7 +15,8 @@ void add_submodule(py::module &m) {
 
 void add_vector(py::module &m) {
   add_euclidean_multivector<vector_t>(m, "Vector")
-      .def(py::init<double, double, double>());
+      .def(py::init<double, double, double>())
+      .def("null", &vector_t::null);
 }
 
 void add_bivector(py::module &m) {

@@ -204,7 +204,6 @@ template <type a, type dim> constexpr bool checkMink() {
   return ((a & eplane<dim>()) == 0) || ((a & eplane<dim>()) == eplane<dim>());
 }
 
-} // bits::
+} // namespace bits
 
-} // vsr::
-
+} // namespace vsr

@@ -20,6 +20,7 @@ void add_submodule(py::module &m) {
   add_flat(cga);
   add_construct(cga);
   add_generate(cga);
+  add_operate(cga);
 }
 
 void add_vector(py::module &m) {
@@ -85,17 +86,36 @@ void add_round(py::module &m) {
   round.def("null", [](const ega::vector_t &arg) { return Round::null(arg); });
   round.def("null", [](const cga::vector_t &arg) { return Round::null(arg); });
   round.def("radius",
-            [](const cga::vector_t &arg) { return Round::radius(arg); });
+            [](const cga::dual_sphere_t &arg) { return Round::radius(arg); });
   round.def("radius",
-            [](const cga::quadvector_t &arg) { return Round::radius(arg); });
+            [](const cga::sphere_t &arg) { return Round::radius(arg); });
+  round.def("radius",
+            [](const cga::point_pair_t &arg) { return Round::radius(arg); });
+  round.def("radius",
+            [](const cga::circle_t &arg) { return Round::radius(arg); });
+
   round.def("center",
-            [](const cga::vector_t &arg) { return Round::center(arg); });
+            [](const cga::dual_sphere_t &arg) { return Round::center(arg); });
   round.def("center",
-            [](const cga::quadvector_t &arg) { return Round::center(arg); });
+            [](const cga::sphere_t &arg) { return Round::center(arg); });
+  round.def("center",
+            [](const cga::point_pair_t &arg) { return Round::center(arg); });
+  round.def("center",
+            [](const cga::circle_t &arg) { return Round::center(arg); });
+
   round.def("location",
             [](const cga::vector_t &arg) { return Round::location(arg); });
   round.def("location",
             [](const cga::quadvector_t &arg) { return Round::location(arg); });
+
+  round.def("location",
+            [](const cga::dual_sphere_t &arg) { return Round::location(arg); });
+  round.def("location",
+            [](const cga::sphere_t &arg) { return Round::location(arg); });
+  round.def("location",
+            [](const cga::point_pair_t &arg) { return Round::location(arg); });
+  round.def("location",
+            [](const cga::circle_t &arg) { return Round::location(arg); });
 }
 
 void add_flat(py::module &m) {
@@ -106,6 +126,9 @@ void add_flat(py::module &m) {
 void add_construct(py::module &m) {
   using vsr::cga::Construct;
   auto construct = m.def_submodule("construct");
+  construct.def("sphere", [](const cga::point_t &p, double r) {
+    return Construct::sphere(p, r);
+  });
   construct.def("meet", [](const cga::vector_t &p, const cga::vector_t &q) {
     return Construct::meet(p, q);
   });
@@ -116,6 +139,12 @@ void add_generate(py::module &m) {
   auto generate = m.def_submodule("generate");
   generate.def("log", [](const cga::motor_t &m) { return Gen::log(m); });
   generate.def("exp", [](const cga::dual_line_t &b) { return Gen::mot(b); });
+}
+
+void add_operate(py::module &m) {
+  using vsr::cga::Op;
+  auto operate = m.def_submodule("operate");
+  operate.def("axis_angle", [](const cga::circle_t &c) { return Op::AA(c); });
 }
 
 } // namespace cga
