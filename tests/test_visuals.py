@@ -113,21 +113,21 @@ base = scene.visuals.XYZAxis(parent=view.scene)
 # print(im)
 
 
-import threading
-def worker():
-    port = "5556"
-    context = zmq.Context()
-    socket = context.socket(zmq.PAIR)
-    socket.bind("tcp://*:%s" % port)
-    while True:
-        socket.send_string("Server message to client3")
-        msg = socket.recv()
-        a = pickle.loads(msg)
-        print(a)
-        time.sleep(1)
+# import threading
+# def worker():
+#     port = "5556"
+#     context = zmq.Context()
+#     socket = context.socket(zmq.PAIR)
+#     socket.bind("tcp://*:%s" % port)
+#     while True:
+#         socket.send_string("Server message to client3")
+#         msg = socket.recv()
+#         a = pickle.loads(msg)
+#         print(a)
+#         time.sleep(1)
 
-thread = threading.Thread(target=worker)
-thread.start()
+# thread = threading.Thread(target=worker)
+# thread.start()
 
 def on_key_press(event):
     # modifiers = [key.name for key in event.modifiers]

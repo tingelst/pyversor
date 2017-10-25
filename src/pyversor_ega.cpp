@@ -11,6 +11,7 @@ void add_submodule(py::module &m) {
   add_trivector(ega);
   add_rotator(ega);
   add_multivector(ega);
+  add_generate(ega);
 }
 
 void add_vector(py::module &m) {
@@ -20,8 +21,10 @@ void add_vector(py::module &m) {
 }
 
 void add_bivector(py::module &m) {
+  using vsr::nga::Gen;
   add_euclidean_multivector<bivector_t>(m, "Bivector")
-      .def(py::init<double, double, double>());
+      .def(py::init<double, double, double>())
+      .def("exp", [](const bivector_t &b) { return Gen::rot(b); });
 }
 
 void add_trivector(py::module &m) {
@@ -30,8 +33,10 @@ void add_trivector(py::module &m) {
 }
 
 void add_rotator(py::module &m) {
+  using vsr::nga::Gen;
   add_euclidean_multivector<rotator_t>(m, "Rotator")
-      .def(py::init<double, double, double, double>());
+      .def(py::init<double, double, double, double>())
+      .def("log", [](const rotator_t &m) { return Gen::log(m); });
 }
 
 void add_multivector(py::module &m) {
@@ -39,6 +44,19 @@ void add_multivector(py::module &m) {
       .def(py::init<>())
       .def(py::init<double, double, double, double, double, double, double,
                     double>());
+}
+
+void add_generate(py::module &m) {
+  using vsr::nga::Gen;
+  auto generate = m.def_submodule("generate");
+  generate.def("ratio", [](const vector_t &a, const vector_t &b) {
+    return Gen::ratio(a, b);
+  });
+  generate.def("ratio", [](const bivector_t &a, const bivector_t &b) {
+    return Gen::ratio(a, b);
+  });
+  generate.def("log", [](const rotator_t &m) { return Gen::log(m); });
+  generate.def("exp", [](const bivector_t &b) { return Gen::rot(b); });
 }
 
 } // namespace ega

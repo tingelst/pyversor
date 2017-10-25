@@ -48,7 +48,8 @@ void add_quadvector(py::module &m) {
 void add_motor(py::module &m) {
   add_conformal_multivector<motor_t>(m, "Motor")
       .def(py::init<double, double, double, double, double, double, double,
-                    double>());
+                    double>())
+      .def("rotator", [](const motor_t &arg) { return ega::rotator_t(arg); });
 }
 
 void add_dual_line(py::module &m) {
@@ -121,6 +122,9 @@ void add_round(py::module &m) {
 void add_flat(py::module &m) {
   using vsr::cga::Flat;
   auto flat = m.def_submodule("flat");
+  flat.def("location", [](const dual_plane_t &a, const point_t &b) {
+    return Flat::location(a, b, true);
+  });
 }
 
 void add_construct(py::module &m) {

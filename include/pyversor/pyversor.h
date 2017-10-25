@@ -60,6 +60,7 @@ void add_bivector(py::module &m);
 void add_trivector(py::module &m);
 void add_rotator(py::module &m);
 void add_multivector(py::module &m);
+void add_generate(py::module &m);
 
 } // namespace ega
 
@@ -187,11 +188,11 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
     ss << arg[arg.Num - 1] << "])";
     return ss.str();
   });
-  t.def_buffer([](T &arg) {
-    return py::buffer_info(
-        &arg.val[0], sizeof(double), py::format_descriptor<double>::format(), 1,
-        {static_cast<unsigned long>(arg.Num)}, {sizeof(double)});
-  });
+  // t.def_buffer([](T &arg) {
+  //   return py::buffer_info(
+  //       &arg.val[0], sizeof(double), py::format_descriptor<double>::format(),
+  //       1, {static_cast<unsigned long>(arg.Num)}, {sizeof(double)});
+  // });
   t.def(py::pickle(
       [](const T &p) { // __getstate__
         /* Return a tuple that fully encodes the state of the object */
