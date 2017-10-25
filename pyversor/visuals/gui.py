@@ -16,6 +16,7 @@ canvas = scene.SceneCanvas(keys='interactive', bgcolor='white',
                         size=(1920,1080), show=True)
 view = canvas.central_widget.add_view()
 view.camera = 'arcball'
+
 scene.visuals.XYZAxis(parent=view.scene)
 
 Plot3D = scene.visuals.create_visual_node(visuals.LinePlotVisual)
