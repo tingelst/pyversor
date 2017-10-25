@@ -136,6 +136,24 @@ Mot Gen::mot(const Dll &dll) {
 
 Mot Gen::motor(const Dll &dll) { return mot(dll); }
 
+Mot Gen::outer_exponential(const Dll &B) {
+  double n = sqrt(1.0 + B[0] * B[0] + B[1] * B[1] + B[2] * B[2]);
+  double s = B[0] * B[5] - B[1] * B[4] + B[2] * B[3];
+  Mot m = Mot(1.0, B[0], B[1], B[2], B[3], B[4], B[5], s) / n;
+  return m;
+}
+
+Mot Gen::cayley(const Dll &B) {
+  Mot B_ = Mot(0.0, B[0], B[1], B[2], B[3], B[4], B[5], 0.0);
+  Mot BB = B_ * B_;
+  Mot Rp = Mot(1.0, B[0], B[1], B[2], B[3], B[4], B[5], 0.0);
+  Mot R0 = Mot(1.0 - BB[0], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  Mot R4 = Mot(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, BB[7]);
+  Mot Rn = R0 + R4;
+  Mot Rden = R0 * R0;
+  return (Rp * Rp * Rn * !Rden);
+}
+
 /*! Dual Line Generator from a Motor
     An implementation of J.Lasenby et al "Applications of Conformal Geometric
    Algebra in
@@ -199,7 +217,7 @@ Mot Gen::ratio(const Dll &a, const Dll &b, VSR_PRECISION t) {
 }
 
 /*! Generate Motor That Twists Motor a to motor b by amt t;
-*/
+ */
 Mot Gen::ratio(const Mot &a, const Mot &b, VSR_PRECISION t) {
   return Gen::mot(Gen::log(b / a) * t);
 }
@@ -223,7 +241,7 @@ Bst Gen::ratio(const DualSphere &a, const DualSphere &b, bool bFlip) {
 }
 
 /*! Generate Simple Boost rotor from ratio of two dual spheres
-*/
+ */
 Pair Gen::log(const DualSphere &a, const DualSphere &b, VSR_PRECISION t,
               bool bFlip) {
   Bst tbst = (b / a).runit();
@@ -487,8 +505,8 @@ Con Gen::con(const Circle &ca, const Circle &cb, VSR_PRECISION amtA,
  *  ROTORS
  *-----------------------------------------------------------------------------*/
 /*!
-* \brief  generate a rotor transformation from a euclidean bivector
-*/
+ * \brief  generate a rotor transformation from a euclidean bivector
+ */
 Rotor Gen::xf(const Biv &b) { return Gen::rot(b); }
 /*!
  *  \brief  generate a motor transformation from a dual line
@@ -584,7 +602,7 @@ Circle Construct::circle(const Biv &B) {
 
 /*!
  *  \brief  Circle at point p with radius r, facing direction biv
-*/
+ */
 Circle Construct::circle(const Point &p, VSR_PRECISION r, const Biv &biv) {
   return Round::produce(Round::dls(p, r * -1), biv);
 }
@@ -667,9 +685,9 @@ VSR_PRECISION Construct::distance(const Lin &lin, const Pnt &pnt) {
   return (pnt <= lin.dual())[0] * -2.0;
 }
 
-/* Line line(VSR_PRECISION x, VSR_PRECISION y, VSR_PRECISION z){ */
-/*   return point(a[0], a[1], a[2]) ^ Vec(b[0], b[1], b[2]) ^ Inf(1); */
-/* } */
+  /* Line line(VSR_PRECISION x, VSR_PRECISION y, VSR_PRECISION z){ */
+  /*   return point(a[0], a[1], a[2]) ^ Vec(b[0], b[1], b[2]) ^ Inf(1); */
+  /* } */
 
 #pragma mark COINCIDENCE_FUNCTIONS
 
@@ -801,5 +819,5 @@ Point Construct::hspin(const Pnt &pa, const Pnt &pb, double amt) {
   // versor * dist * amt * .5) );
 }
 
-} // cga::
-} // vsr::
+} // namespace cga
+} // namespace vsr

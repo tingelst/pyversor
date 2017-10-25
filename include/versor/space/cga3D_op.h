@@ -158,12 +158,18 @@ struct Gen {
   */
   static Mot motor(const Dll &dll);
 
+  static Mot outer_exponential(const Dll &B);
+
+  static Mot cayley(const Dll &B);
+
   /*! DualLine generator from a Motor
-      @param m a vsr::cga::Motor (a concatenation of rotation and translation)
+      @param m a vsr::cga::Motor (a concatenation of rotation and
+     translation)
   */
   static Dll log(const Mot &m);
 
-  /*! DualLine generator of Motor That Twists DualLine a to DualLine b by amt t;
+  /*! DualLine generator of Motor That Twists DualLine a to DualLine b by amt
+     t;
 
       @param a DualLine source
       @param b DualLine target
@@ -223,7 +229,8 @@ struct Gen {
   static Pair log(const DualSphere &a, const DualSphere &b, VSR_PRECISION t,
                   bool bFlip = true);
 
-  /*! atanh2 function for logarithm of general rotors, with clockwise boolean */
+  /*! atanh2 function for logarithm of general rotors, with clockwise boolean
+   */
   static Pair atanh2(const Pair &p, VSR_PRECISION cs, bool bCW,
                      bool bTwoPI = false);
 
