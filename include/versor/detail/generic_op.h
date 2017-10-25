@@ -36,58 +36,29 @@
 
 namespace vsr {
 
-/*-----------------------------------------------------------------------------
- *  Group Definitions for Doxygen...
- *-----------------------------------------------------------------------------*/
-
-/** @defgroup generic Generic
-    Generic Functions Applicable in N-Dimensions
-*/
-
-/** @defgroup egageneric ND Euclidean Operations
-    @ingroup generic
-    Euclidean Functions Applicable in N-Dimensions
-*/
-
-/** @defgroup cgageneric ND Conformal Operations
-    @ingroup generic
-    Conformal Functions Applicable in N-Dimensions
-*/
-
-/**
-* @brief ND Generic Operations
-  @ingroup generic
-
-  @sa vsr::cga for @ref cgaops documentation
-*/
 namespace nga {
 
 /*!
- *  Projection fron ND Euclidean down to 3D
+ *  Projection from ND Euclidean down to 3D
  */
 template <int DIM> struct Proj {
 
   typedef NEVec<DIM> TVec;        ///< ND Vector Type
   typedef NEVec<DIM - 1> OneDown; ///< Next Projection Down
 
-  static auto Call(VSR_PRECISION dist, const TVec &v)
-      RETURNS((Proj<DIM - 1>::Call(
-          dist, v.template cast<OneDown>() * (dist / (dist - v[DIM - 1])))))
+  static auto Call(VSR_PRECISION dist, const TVec &v) {
+    return (Proj<DIM - 1>::Call(dist, v.template cast<OneDown>() *
+                                          (dist / (dist - v[DIM - 1]))));
+  }
 
-          template <int DIM2>
-          static auto Ortho(const TVec &v)
-              RETURNS((v.template cast<NEVec<DIM2>>()))
+  template <int DIM2>
+  static auto Ortho(const TVec &v) RETURNS((v.template cast<NEVec<DIM2>>()));
 
-                  static auto Ortho3(const TVec &v)
-                      RETURNS((v.template cast<NEVec<3>>()))
+  static auto Ortho3(const TVec &v) RETURNS((v.template cast<NEVec<3>>()));
 
-                          static VSR_PRECISION
-      Val(VSR_PRECISION dist, const TVec &v) {
+  static VSR_PRECISION Val(VSR_PRECISION dist, const TVec &v) {
     return dist / (dist - v[DIM - 1]) * Proj<DIM - 1>::Val(dist, OneDown(v));
   }
-  // static VSR_PRECISION Val( VSR_PRECISION dist, const Vec& v) {
-  //   return Proj< DIM, 4, DIM==TARGET >::Call(dist, v);
-  // }
 };
 
 template <> struct Proj<3> {
@@ -550,7 +521,7 @@ struct Gen {
 struct Round {
 
   /*! Null Point from Arbitrary Multivector
-  */
+   */
   template <class A, class B>
   static constexpr GAPnt<A> null(const Multivector<A, B> &v) {
     using TVec = GAVec<A>;
@@ -561,7 +532,7 @@ struct Round {
   }
 
   /*! Or Null Point from Coordinates (x,y,z,...)
-  */
+   */
   template <class... T> static constexpr NPnt<sizeof...(T) + 2> null(T... v) {
     using TVEC = NVec<sizeof...(T) + 2>;
     using TORI = NOri<sizeof...(T) + 2>;
@@ -571,7 +542,7 @@ struct Round {
   }
 
   /*! Null Point from Coordinates
-  */
+   */
   template <class... T> static constexpr NPnt<sizeof...(T) + 2> point(T... v) {
     using TVEC = NVec<sizeof...(T) + 2>;
     return null(TVEC(v...));
@@ -675,7 +646,7 @@ struct Round {
     return ((r * r.inv()) / (s * s) * ((dual) ? -1.0 : 1.0))[0];
   }
   /*! Radius of Round
-  */
+   */
   template <class T> static constexpr VSR_PRECISION radius(const T &s) {
     return sqrt(fabs(size(s, false)));
   }
@@ -707,7 +678,7 @@ struct Round {
   }
 
   /*! Squared distance between two points
-  */
+   */
   template <class A>
   static constexpr VSR_PRECISION squaredDistance(const GAPnt<A> &a,
                                                  const GAPnt<A> b) {
@@ -791,7 +762,7 @@ struct Round {
 
   /*!
    * Split A Circle into its dual point pair poles
-  */
+   */
   template <class A> static std::vector<GAPnt<A>> split(const GACir<A> &nc) {
     return split(nc.dual());
   }
@@ -817,7 +788,7 @@ struct Round {
       static constexpr auto carrier(const A &s)
           RETURNS(s ^ typename A::space::infinity(1))
       /*! Carrier Flat of Direct? Round Element (Shorthand)
-      */
+       */
       template <class A>
       static constexpr auto car(const A &s) RETURNS(carrier(s))
 
@@ -1067,7 +1038,7 @@ struct Tangent {
   }
 };
 
-} // nga::
+} // namespace nga
 
 //------------------------------------------
 
@@ -1167,4 +1138,4 @@ Multivector<Algebra, B>::boost(const Multivector<Algebra, A> &t) const {
   return this->sp(nga::Gen::bst(t));
 }
 
-} // vsr::
+} // namespace vsr

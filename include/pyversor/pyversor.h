@@ -112,18 +112,35 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
   t.def(py::init<const cga::multivector_t &>());
   // negate
   t.def("__neg__", [](const T &arg) { return -arg; });
+  // reverse
+  t.def("__invert__", [](const T &arg) { return ~arg; });
+  t.def("reverse", [](const T &arg) { return ~arg; });
+  // inverse
+  t.def("inverse", [](const T &arg) { return !arg; });
+  // involution
+  t.def("involute", &T::conjugation);
+  // conjugation
+  t.def("conjugate", &T::conjugation);
   // geometric product
+  t.def("geometric", [](const T &lhs, const T &rhs) { return lhs * rhs; });
   t.def("__mul__", [](const T &lhs, const T &rhs) { return lhs * rhs; });
   t.def("__mul__", [](const T &lhs, double rhs) { return lhs * rhs; });
   t.def("__rmul__", [](const T &lhs, double rhs) { return lhs * rhs; });
   t.def("__imul__", [](T &lhs, double rhs) { return lhs *= rhs; });
+  // division
+  t.def("__div__", [](const T &lhs, const T &rhs) { return lhs / rhs; });
+  t.def("__div__", [](const T &lhs, double rhs) { return lhs / rhs; });
+  t.def("__idiv__", [](T &lhs, const T &rhs) { return lhs /= rhs; });
+  t.def("__idiv__", [](T &lhs, double rhs) { return lhs /= rhs; });
   // addition
   t.def("__add__", [](const T &lhs, const T &rhs) { return lhs + rhs; });
   t.def("__add__", [](const T &lhs, double rhs) { return lhs + rhs; });
+  t.def("__iadd__", [](T &lhs, const T &rhs) { return lhs += rhs; });
   t.def("__radd__", [](const T &lhs, double rhs) { return lhs + rhs; });
   // subtraction
   t.def("__sub__", [](const T &lhs, const T &rhs) { return lhs - rhs; });
   t.def("__sub__", [](const T &lhs, double rhs) { return lhs + (rhs * -1.0); });
+  t.def("__isub__", [](T &lhs, const T &rhs) { return lhs -= rhs; });
   t.def("__rsub__",
         [](const T &lhs, double rhs) { return lhs + (rhs * -1.0); });
   // outer product
@@ -133,11 +150,28 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
   t.def("__xor__", [](const T &lhs, double rhs) { return lhs * rhs; });
   t.def("__rxor__", [](const T &lhs, double rhs) { return lhs * rhs; });
   // inner product
-  t.def("inner", [](const T &lhs, const T &rhs) { return lhs <= rhs; });
-  t.def("__le__", [](const T &lhs, const T &rhs) { return lhs <= rhs; });
-  // Sandwich product
-  t.def("spin", (T(T::*)(const ega::rotator_t &) const) & T::spin);
-  t.def("spin", (T(T::*)(const cga::motor_t &) const) & T::spin);
+  t.def("inner", [](const T &lhs, const T &rhs) { return (lhs <= rhs)[0]; });
+  t.def("__le__", [](const T &lhs, const T &rhs) { return (lhs <= rhs)[0]; });
+  // commutator products
+  t.def("commutator", [](const T &lhs, const T &rhs) { return lhs % rhs; });
+  t.def("anti_commutator", [](const T &lhs, const T &rhs) {
+    return (lhs * rhs + rhs * lhs) * 0.5;
+  });
+  // sandwich product
+  t.def("spin",
+        [](const T &lhs, const ega::rotator_t &rhs) { return lhs.spin(rhs); });
+  t.def("spin",
+        [](const T &lhs, const cga::motor_t &rhs) { return lhs.spin(rhs); });
+  // reflect
+  t.def("reflect", [](const T &lhs, const T &rhs) { return lhs.reflect(rhs); });
+  // weights, units and norms
+  t.def("weight", &T::wt);
+  t.def("rweight", &T::rwt);
+  t.def("norm", &T::norm);
+  t.def("rnorm", &T::rnorm);
+  t.def("unit", &T::unit);
+  t.def("runit", &T::runit);
+  t.def("tunit", &T::tunit);
   // Get scalar coefficient
   t.def("__getitem__", [](T &arg, int idx) { return arg[idx]; });
   // Set scalar coefficient
