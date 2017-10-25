@@ -20,16 +20,7 @@ scene.visuals.XYZAxis(parent=view.scene)
 
 Plot3D = scene.visuals.create_visual_node(visuals.LinePlotVisual)
 
-Ellipse3D = scene.visuals.create_visual_node(visuals.EllipseVisual)
-
 def on_key_press(event):
-    # modifiers = [key.name for key in event.modifiers]
-    # print('Key pressed - text: %r, key: %s, modifiers: %r' % (
-    #     event.text, event.key.name, modifiers))
-    if event.key.name == 'A':
-        # print(dir(view.scene))
-        print(view.scene.children)
-        Ellipse3D([0,0,0], parent=view.scene, radius=2.5, border_color='r', color=(0,0,0,0.5))
     if event.key.name == 'S':
         filename = '{}-pyversor-screenshot.png'.format(datetime.datetime.now().isoformat())
         screenshot = canvas.render()
@@ -44,7 +35,6 @@ def draw_point(point):
     p.transform = STTransform(translate=pos)
 
 def draw_line(line):
-    print('called line')
     pos = [[p[0], p[1], p[2]] for p in line]
     Plot3D(pos, width=2.0, parent=view.scene)
     # Plot3D(pos, width=2.0, color='red',
@@ -54,25 +44,18 @@ def draw_line(line):
 
 def draw(drawable):
     if isinstance(drawable, list):
-        print('Received list of {} objects'.format(len(drawable)))
         draw_line(drawable)
-        # for item in drawable:
-        #     draw_point(item)
 
 def worker():
-    print('Starting GUI')
     port = "5556"
     context = zmq.Context()
     socket = context.socket(zmq.PAIR)
     socket.bind("tcp://127.0.0.1:%s" % port)
     while True:
-        print('running')
         msg = socket.recv()
-        print(msg)
         a = pickle.loads(msg)
         draw(a)
-        time.sleep(0.1)
-
+        time.sleep(0.05)
 
 if __name__ == '__main__':
     thread = threading.Thread(target=worker)
