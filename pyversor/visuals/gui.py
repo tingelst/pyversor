@@ -1,10 +1,14 @@
 from vispy import io
 from vispy import scene, visuals
+from vispy.visuals.transforms import MatrixTransform, STTransform
+
 import datetime
 import time
 import threading
 import pickle
 import zmq
+
+from pyversor import *
 
 canvas = scene.SceneCanvas(keys='interactive', bgcolor='white',
                         size=(1920,1080), show=True)
@@ -13,7 +17,6 @@ view.camera = 'arcball'
 scene.visuals.XYZAxis(parent=view.scene)
 
 Ellipse3D = scene.visuals.create_visual_node(visuals.EllipseVisual)
-
 
 def on_key_press(event):
     # modifiers = [key.name for key in event.modifiers]
@@ -31,9 +34,16 @@ def on_key_press(event):
 
 canvas.connect(on_key_press)
 
+def draw_point(point):
+    pos = [point[0], point[1], point[2]]
+    p = scene.visuals.Sphere(radius=0.01, parent=view.scene)
+    p.transform = STTransform(translate=pos)
+
 def draw(drawable):
     if isinstance(drawable, list):
         print('Received list of {} objects'.format(len(drawable)))
+        for item in drawable:
+            draw_point(item)
 
 def worker():
     print('Starting GUI')
@@ -47,11 +57,11 @@ def worker():
         print(msg)
         a = pickle.loads(msg)
         draw(a)
-        time.sleep(1)
+        time.sleep(0.1)
 
 
 if __name__ == '__main__':
     thread = threading.Thread(target=worker)
+    thread.daemon = True
     thread.start()
     canvas.app.run()
-    thread.join()
