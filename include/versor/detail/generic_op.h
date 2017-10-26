@@ -738,84 +738,56 @@ struct Round {
   }
 };
 
-/*!
- *  Generic ND Operations On Flat Types
-    @ingroup cgageneric
-
-    e.g. Line, DualLine, Plane, DualPlane, FlatPoint
- *
- */
+// Generic ND Operations On Flat Types e.g. Line, DualLine, Plane, DualPlane,
+// FlatPoint
 struct Flat {
-  /*! Direction of Direct Flat
-        @param Direct Flat [ Plane (Pln) or Line (Lin) ]
-        @returns \direction
-    */
+  // Direction of Direct Flat
   template <class A, class B>
-  static constexpr auto direction(const Multivector<A, B> &f)
-      RETURNS(GAInf<A>(-1) <= f)
-      /*! Direction of Direct Flat
-            @param Direct Flat [ Plane (Pln) or Line (Lin) ]
-            @returns \direction
-        */
-      template <class A, class B>
-      static constexpr auto dir(const Multivector<A, B> &f)
-          RETURNS(direction(f))
+  static constexpr auto direction(const Multivector<A, B> &f) {
+    return GAInf<A>(-1) <= f;
+  }
 
-      /*! Location of Flat A closest to Point p
+  // Direction of Direct Flat
+  template <class A, class B>
+  static constexpr auto dir(const Multivector<A, B> &f) {
+    return direction(f);
+  }
 
-            @param f Dual or Direct Flat [ DualLine (Dll), Line (Lin), DualPlane
-         (Dlp), or Plane (Pln) ]
-            @param p a Conformal Point
-            @param dual Duality Flag
-
-            @returns conformal point in same metric as f
-        */
-      template <class A>
-      static constexpr typename A::space::Pnt
-      location(const A &f, const typename A::space::Pnt &p, bool dual) {
+  // Location of Flat A closest to Point p
+  template <class A>
+  static constexpr typename A::space::Pnt location(
+      const A &f, const typename A::space::Pnt &p, bool dual) {
     using TPnt = typename A::space::Pnt;
     return dual ? TPnt((p ^ f) / f) : TPnt((p <= f) / f);
   }
 
-  /**
-  * Location of Flat A closest to Point p (shorthand)
-
-      @param f Dual or Direct Flat [ DualLine (Dll), Line (Lin), DualPlane
-  (Dlp), or Plane (Pln) ]
-      @param p a Conformal Point
-      @param dual Duality Flag
-  *
-  * @return
-  */
+  // Location of Flat A closest to Point p
   template <class A, class P>
   static constexpr P loc(const A &f, const P &p, bool dual) {
     return location(f, p, dual);
   }
 
-  /*! Weight of Flat
-
-       @param f Dual or Direct Flat type e.g. vsr::cga::Line or
-     vsr::cga::DualLine
-       @param bDual boolean flag for whether first argument is a dual
-   */
+  // Weight of Flat
   template <class A>
   static constexpr typename A::value_t wt(const A &f, bool bDual) {
     using TOri = typename A::space::origin;
     return bDual ? (TOri(1) <= dir(f.undual())).wt() : (TOri(1) <= dir(f)).wt();
   }
-  /*! Dual Plane from Point and Direction */
-  template <class A>
-  static constexpr auto dlp(const GAPnt<A> &pnt, const GADrv<A> &drv)
-      RETURNS(pnt <= drv)
 
-      /*! Direct Line at origin with coordinate v ... */
-      template <typename... T>
-      static constexpr NLin<sizeof...(T) + 2> line(T... v) {
+  // Dual Plane from Point and Direction
+  template <class A>
+  static constexpr auto dlp(const GAPnt<A> &pnt, const GADrv<A> &drv) {
+    return pnt <= drv;
+  }
+
+  // Direct Line at origin with coordinate v ...
+  template <typename... T>
+  static constexpr NLin<sizeof...(T) + 2> line(T... v) {
     return nga::Round::null(NVec<sizeof...(T) + 2>()) ^ nga::Round::null(v...) ^
            NInf<sizeof...(T) + 2>(1);
   }
 
-  /*! Direct hyperbolic d-Line at origin with coordinate v ... */
+  // Direct hyperbolic d-Line at origin with coordinate v ...
   template <typename... T>
   static constexpr NCir<sizeof...(T) + 2> dline(T... v) {
     return nga::Round::null(NVec<sizeof...(T) + 2>()) ^ nga::Round::null(v...) ^
@@ -823,13 +795,7 @@ struct Flat {
   }
 };
 
-/*!
- *  Generic ND Operations on a @ref tangent
-    @ingroup cgageneric
-
-    @sa vsr::cga::Tangent for 3D case
-    *
- */
+// Generic ND Operations on a tangent
 struct Tangent {
   //    /*! Direction of Tangent Element (similar formulation to Rounds)
   //        @ingroup direction
