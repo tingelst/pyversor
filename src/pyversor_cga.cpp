@@ -50,8 +50,16 @@ void add_motor(py::module &m) {
       .def(py::init<double, double, double, double, double, double, double,
                     double>())
       .def("rotator", [](const motor_t &arg) { return ega::rotator_t(arg); })
-
-      ;
+      .def("normalize", [](const motor_t &arg) {
+        auto norm = arg.norm();
+        auto b = arg * ~arg;
+        auto s0 = b[0];
+        auto s4 = b[7];
+        auto s_inv =
+            scalar_t{(1.0) / norm} *
+            (scalar_t{(1.0)} + direction_trivector_t{-(s4 / (2.0 * s0))});
+        return arg * s_inv;
+      });
 }
 
 void add_dual_line(py::module &m) {
@@ -155,16 +163,6 @@ void add_generate(py::module &m) {
   });
   generate.def("cayley",
                [](const cga::dual_line_t &b) { return Gen::cayley(b); });
-
-  generate.def("normalize", [](const motor_t &m) {
-    double norm = m.norm();
-    motor_t b = m * ~m;
-    double s0 = b[0];
-    double s4 = b[7];
-    auto s_inv = scalar_t{(1.0) / norm} *
-                 (scalar_t{(1.0)} + direction_trivector_t{-(s4 / (2.0 * s0))});
-    return m * s_inv;
-  });
 }
 
 void add_operate(py::module &m) {
