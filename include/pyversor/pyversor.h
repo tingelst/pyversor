@@ -62,7 +62,7 @@ void add_rotator(py::module &m);
 void add_multivector(py::module &m);
 void add_generate(py::module &m);
 
-} // namespace ega
+}  // namespace ega
 
 namespace cga {
 
@@ -82,6 +82,7 @@ using dual_line_t = vsr::cga::Dll;
 using line_t = vsr::cga::Lin;
 using dual_plane_t = vsr::cga::Dlp;
 using plane_t = vsr::cga::Pln;
+using direction_trivector_t = vsr::cga::Drt;
 using multivector_t =
     vsr::Multivector<cga_t, vsr::Basis<0, 1, 2, 4, 8, 16, 3, 5, 6, 9, 10, 12,
                                        17, 18, 20, 24, 7, 11, 13, 14, 19, 21,
@@ -104,7 +105,7 @@ void add_construct(py::module &m);
 void add_generate(py::module &m);
 void add_operate(py::module &m);
 
-} // namespace cga
+}  // namespace cga
 
 template <typename T>
 py::class_<T> add_multivector(py::module &m, const std::string &name) {
@@ -135,9 +136,7 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
   t.def("__idiv__", [](T &lhs, double rhs) { return lhs /= rhs; });
   // addition
   t.def("__add__", [](const T &lhs, const T &rhs) { return lhs + rhs; });
-  t.def("__add__", [](const T &lhs, double rhs) { return lhs + rhs; });
   t.def("__iadd__", [](T &lhs, const T &rhs) { return lhs += rhs; });
-  t.def("__radd__", [](const T &lhs, double rhs) { return lhs + rhs; });
   // subtraction
   t.def("__sub__", [](const T &lhs, const T &rhs) { return lhs - rhs; });
   t.def("__sub__", [](const T &lhs, double rhs) { return lhs + (rhs * -1.0); });
@@ -194,7 +193,7 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
   //       1, {static_cast<unsigned long>(arg.Num)}, {sizeof(double)});
   // });
   t.def(py::pickle(
-      [](const T &p) { // __getstate__
+      [](const T &p) {  // __getstate__
         /* Return a tuple that fully encodes the state of the object */
         std::vector<double> coeffs;
         for (size_t i = 0; i < T::Num; ++i) {
@@ -202,9 +201,8 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
         }
         return coeffs;
       },
-      [](const std::vector<double> &coeffs) { // __setstate__
-        if (coeffs.size() != T::Num)
-          throw std::runtime_error("Invalid state!");
+      [](const std::vector<double> &coeffs) {  // __setstate__
+        if (coeffs.size() != T::Num) throw std::runtime_error("Invalid state!");
         /* Create a new C++ instance */
         T p;
         for (size_t i = 0; i < T::Num; ++i) {
@@ -221,16 +219,16 @@ py::class_<T> add_euclidean_multivector(py::module &m,
   auto t = add_multivector<T>(m, name);
   t.def("grade", [](const T &arg, int grade) {
     switch (grade) {
-    case 0:
-      return T(ega::scalar_t(arg));
-    case 1:
-      return T(ega::vector_t(arg));
-    case 2:
-      return T(ega::bivector_t(arg));
-    case 3:
-      return T(ega::trivector_t(arg));
-    default:
-      throw std::invalid_argument("Can only project onto grades 0 to 3.");
+      case 0:
+        return T(ega::scalar_t(arg));
+      case 1:
+        return T(ega::vector_t(arg));
+      case 2:
+        return T(ega::bivector_t(arg));
+      case 3:
+        return T(ega::trivector_t(arg));
+      default:
+        throw std::invalid_argument("Can only project onto grades 0 to 3.");
     };
   });
   t.def("dual", &T::duale);
@@ -244,20 +242,20 @@ py::class_<T> add_conformal_multivector(py::module &m,
   auto t = add_multivector<T>(m, name);
   t.def("grade", [](const T &arg, int grade) {
     switch (grade) {
-    case 0:
-      return T(cga::scalar_t(arg));
-    case 1:
-      return T(cga::vector_t(arg));
-    case 2:
-      return T(cga::bivector_t(arg));
-    case 3:
-      return T(cga::trivector_t(arg));
-    case 4:
-      return T(cga::quadvector_t(arg));
-    case 5:
-      return T(cga::pseudoscalar_t(arg));
-    default:
-      throw std::invalid_argument("Can only project onto grades 0 to 5.");
+      case 0:
+        return T(cga::scalar_t(arg));
+      case 1:
+        return T(cga::vector_t(arg));
+      case 2:
+        return T(cga::bivector_t(arg));
+      case 3:
+        return T(cga::trivector_t(arg));
+      case 4:
+        return T(cga::quadvector_t(arg));
+      case 5:
+        return T(cga::pseudoscalar_t(arg));
+      default:
+        throw std::invalid_argument("Can only project onto grades 0 to 5.");
     };
   });
   t.def("dual", &T::dual);
@@ -265,4 +263,4 @@ py::class_<T> add_conformal_multivector(py::module &m,
   return t;
 }
 
-} // namespace pyversor
+}  // namespace pyversor

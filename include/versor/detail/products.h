@@ -42,39 +42,9 @@ namespace vsr {
  *  EUCLIDEAN GEOMETRIC PRODUCT COMPILE-TIME TYPE METAPROGRAMMING ROUTINES
  *-----------------------------------------------------------------------------*/
 
-// template<int TProduct, typename product, int idxA, int idxB> struct
-// sub_impl{};
-//
-// template<typename product, int idxA, int idxB>
-// struct sub_impl<0,product,idxA,idxB>{
-//   using arrow = binary_function_token< product::is_positive, idxA, idxB>;
-//   using type = XList< arrow >;
-// };
-// template<typename product>
-// struct sub_impl<1,product,idxA,idxB>{
-//   using arrow = binary_function_token< product::is_positive, idxA, idxB>;
-//   using type = typename Maybe< product::has_outer, XList< arrow >, XList<>
-//   >::Type;
-// };
-// template<typename product>
-// struct sub_impl<2,product,idxA,idxB>{
-//   using arrow = binary_function_token< product::is_positive, idxA, idxB>;
-//   using type = typename Maybe< product::has_inner, XList< arrow >, XList<>
-//   >::Type;
-// };
-//
-//
-////tmp (in progress and currently unused)
-// template<int TProduct, bits::type A, class B, int idxA, int idxB>
-// struct sub{
-//    using impl = typename sub_impl<TProduct, product<A, B::HEAD, idxA,
-//    idxB>::type;
-//    typedef typename XCat< impl, typename sub<A, typename B::TAIL, idxA,
-//    idxB+1>::Type >::Type Type;
-// };
-
 /// Geometric Product Type Calculation Sub Loop
-template <bits::type A, class B, int idxA, int idxB> struct SubEGP {
+template <bits::type A, class B, int idxA, int idxB>
+struct SubEGP {
   typedef typename XCat<
       XList<Inst<bits::signFlip(A, B::HEAD), A, B::HEAD, idxA, idxB>>,
       typename SubEGP<A, typename B::TAIL, idxA, idxB + 1>::Type>::Type Type;
@@ -85,13 +55,15 @@ struct SubEGP<A, Basis<>, idxA, idxB> {
   typedef XList<> Type;
 };
 /// Geometric Product Type Calculation Main Loop
-template <class A, class B, int idxA = 0, int idxB = 0> struct EGP {
+template <class A, class B, int idxA = 0, int idxB = 0>
+struct EGP {
   typedef typename XCat<
       typename SubEGP<A::HEAD, B, idxA, idxB>::Type,
       typename EGP<typename A::TAIL, B, idxA + 1, idxB>::Type>::Type Type;
 };
 /// Geometric Product Type Calculation Main Loop End Case
-template <class B, int idxA, int idxB> struct EGP<Basis<>, B, idxA, idxB> {
+template <class B, int idxA, int idxB>
+struct EGP<Basis<>, B, idxA, idxB> {
   typedef XList<> Type;
 };
 
@@ -99,7 +71,8 @@ template <class B, int idxA, int idxB> struct EGP<Basis<>, B, idxA, idxB> {
  *  EUCLIDEAN OUTER PRODUCT COMPILE-TIME TYPE METAPROGRAMMING ROUTINES
  *-----------------------------------------------------------------------------*/
 /// Outer Product Type Calculation Sub Loop
-template <bits::type A, class B, int idxA, int idxB> struct SubEOP {
+template <bits::type A, class B, int idxA, int idxB>
+struct SubEOP {
   typedef Inst<bits::signFlip(A, B::HEAD), A, B::HEAD, idxA, idxB> INST;
   typedef typename Maybe<INST::OP, XList<INST>, XList<>>::Type ELEM;
   typedef typename XCat<ELEM, typename SubEOP<A, typename B::TAIL, idxA,
@@ -111,13 +84,15 @@ struct SubEOP<A, Basis<>, idxA, idxB> {
   typedef XList<> Type;
 };
 /// Outer Product Type Calculation Main Loop
-template <class A, class B, int idxA = 0, int idxB = 0> struct EOP {
+template <class A, class B, int idxA = 0, int idxB = 0>
+struct EOP {
   typedef typename XCat<
       typename SubEOP<A::HEAD, B, idxA, idxB>::Type,
       typename EOP<typename A::TAIL, B, idxA + 1, idxB>::Type>::Type Type;
 };
 /// Outer Product Type Calculation Main Loop End Case
-template <class B, int idxA, int idxB> struct EOP<Basis<>, B, idxA, idxB> {
+template <class B, int idxA, int idxB>
+struct EOP<Basis<>, B, idxA, idxB> {
   typedef XList<> Type;
 };
 
@@ -125,7 +100,8 @@ template <class B, int idxA, int idxB> struct EOP<Basis<>, B, idxA, idxB> {
  *  EUCLIDEAN INNER PRODUCT COMPILE-TIME TYPE METAPROGRAMMING ROUTINES
  *-----------------------------------------------------------------------------*/
 /// Inner Product Type Calculation Sub Loop
-template <bits::type A, class B, int idxA, int idxB> struct SubEIP {
+template <bits::type A, class B, int idxA, int idxB>
+struct SubEIP {
   typedef Inst<bits::signFlip(A, B::HEAD), A, B::HEAD, idxA, idxB> INST;
   typedef typename Maybe<INST::IP, XList<INST>, XList<>>::Type ELEM;
   typedef typename XCat<ELEM, typename SubEIP<A, typename B::TAIL, idxA,
@@ -137,33 +113,38 @@ struct SubEIP<A, Basis<>, idxA, idxB> {
   typedef XList<> Type;
 };
 /// Inner Product Type Calculation Main loop
-template <class A, class B, int idxA = 0, int idxB = 0> struct EIP {
+template <class A, class B, int idxA = 0, int idxB = 0>
+struct EIP {
   typedef typename XCat<
       typename SubEIP<A::HEAD, B, idxA, idxB>::Type,
       typename EIP<typename A::TAIL, B, idxA + 1, idxB>::Type>::Type Type;
 };
 /// Inner Product Type Calculation Main Loop End Case
-template <class B, int idxA, int idxB> struct EIP<Basis<>, B, idxA, idxB> {
+template <class B, int idxA, int idxB>
+struct EIP<Basis<>, B, idxA, idxB> {
   typedef XList<> Type;
 };
 
 /*-----------------------------------------------------------------------------
  *  EUCLIDEAN Product Construction Instructions
  *-----------------------------------------------------------------------------*/
-template <class A, class B> struct EGProd {
+template <class A, class B>
+struct EGProd {
   typedef typename EGP<A, B>::Type
-      List;                         //<-- Make Combinatoric List of Instructions
-  typedef Product<List> Fun;        //<-- Use List to make
-  typedef typename Fun::Type basis; //<-- Basis of Return Type
-  typedef typename Fun::DO Arrow;   //<-- The morphism f:axb -> C
+      List;                   //<-- Make Combinatoric List of Instructions
+  typedef Product<List> Fun;  //<-- Use List to make
+  typedef typename Fun::Type basis;  //<-- Basis of Return Type
+  typedef typename Fun::DO Arrow;    //<-- The morphism f:axb -> C
 };
-template <class A, class B> struct EOProd {
+template <class A, class B>
+struct EOProd {
   typedef typename EOP<A, B>::Type List;
   typedef Product<List> Fun;
   typedef typename Fun::Type basis;
   typedef typename Fun::DO Arrow;
 };
-template <class A, class B> struct EIProd {
+template <class A, class B>
+struct EIProd {
   typedef typename EIP<A, B>::Type List;
   typedef Product<List> Fun;
   typedef typename Fun::Type basis;
@@ -173,7 +154,8 @@ template <class A, class B> struct EIProd {
 /*-----------------------------------------------------------------------------
  * EUCLIDEAN Product Type of A and B cast to R (Explicit Return Type Control)
  *-----------------------------------------------------------------------------*/
-template <class A, class B, class R> struct REGProd {
+template <class A, class B, class R>
+struct REGProd {
   typedef typename EGP<A, B>::Type List;
   typedef typename Index<List, R>::Type Arrow;
   typedef R Type;
@@ -272,21 +254,24 @@ struct MIP<Basis<>, B, Metric, idxA, idxB> {
  *  METRIC Product Construction
  *-----------------------------------------------------------------------------*/
 
-template <class A, class B, class Metric> struct MGProd {
+template <class A, class B, class Metric>
+struct MGProd {
   typedef typename MGP<A, B, Metric>::Type List;
   typedef Product<List> Fun;
   typedef typename Fun::Type basis;
   typedef typename Fun::DO Arrow;
 };
 
-template <class A, class B, class Metric> struct MOProd {
+template <class A, class B, class Metric>
+struct MOProd {
   typedef typename MOP<A, B, Metric>::Type List;
   typedef Product<List> Fun;
   typedef typename Fun::Type basis;
   typedef typename Fun::DO Arrow;
 };
 
-template <class A, class B, class Metric> struct MIProd {
+template <class A, class B, class Metric>
+struct MIProd {
   typedef typename MIP<A, B, Metric>::Type List;
   typedef Product<List> Fun;
   typedef typename Fun::Type basis;
@@ -296,7 +281,8 @@ template <class A, class B, class Metric> struct MIProd {
 /*-----------------------------------------------------------------------------
  * METRIC Product Explicit Control
  *-----------------------------------------------------------------------------*/
-template <class A, class B, class R, class M> struct RMGProd {
+template <class A, class B, class R, class M>
+struct RMGProd {
   typedef typename MGP<A, B, M>::Type List;
   typedef typename Index<List, R>::Type Arrow;
   typedef R Type;
@@ -310,7 +296,8 @@ template <class A, class B, class R, class M> struct RMGProd {
  *  SPLIbits::typeING OF INSTRUCTIONS (PUSHING AND POPPING of Minkowskian
  *Diagonal Metric)
  *-----------------------------------------------------------------------------*/
-template <class S, int idxA, int idxB> struct SplitInstructions {
+template <class S, int idxA, int idxB>
+struct SplitInstructions {
   typedef Instruct<(S::HEAD::SIGN < 0), S::HEAD::BIT, idxA, idxB> I;
   typedef
       typename XCat<XList<I>, typename SplitInstructions<typename S::TAIL, idxA,
@@ -318,7 +305,8 @@ template <class S, int idxA, int idxB> struct SplitInstructions {
           Type;
 };
 
-template <int idxA, int idxB> struct SplitInstructions<XList<>, idxA, idxB> {
+template <int idxA, int idxB>
+struct SplitInstructions<XList<>, idxA, idxB> {
   typedef XList<> Type;
 };
 
@@ -421,21 +409,24 @@ struct CIP<Basis<>, B, Metric, idxA, idxB> {
 /*-----------------------------------------------------------------------------
  *  Product Construction Instructions
  *-----------------------------------------------------------------------------*/
-template <class A, class B, class Metric> struct CGProd {
+template <class A, class B, class Metric>
+struct CGProd {
   typedef typename CGP<A, B, Metric>::Type List;
   typedef Product<List> Fun;
   typedef typename Fun::Type basis;
   typedef typename Fun::DO Arrow;
 };
 
-template <class A, class B, class Metric> struct COProd {
+template <class A, class B, class Metric>
+struct COProd {
   typedef typename COP<A, B, Metric>::Type List;
   typedef Product<List> Fun;
   typedef typename Fun::Type basis;
   typedef typename Fun::DO Arrow;
 };
 
-template <class A, class B, class Metric> struct CIProd {
+template <class A, class B, class Metric>
+struct CIProd {
   typedef typename CIP<A, B, Metric>::Type List;
   typedef Product<List> Fun;
   typedef typename Fun::Type basis;
@@ -458,10 +449,11 @@ template <class A, class B, class Metric> struct CIProd {
 /*-----------------------------------------------------------------------------
  * METRIC Product Explicit Control
  *-----------------------------------------------------------------------------*/
-template <class A, class B, class R, class M> struct RCGProd {
+template <class A, class B, class R, class M>
+struct RCGProd {
   typedef typename CGP<A, B, M>::Type List;
   typedef typename Index<List, R>::Type Arrow;
   typedef R Type;
 };
 
-} // vsr::
+}  // vsr::

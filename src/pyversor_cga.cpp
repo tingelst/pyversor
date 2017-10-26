@@ -49,13 +49,20 @@ void add_motor(py::module &m) {
   add_conformal_multivector<motor_t>(m, "Motor")
       .def(py::init<double, double, double, double, double, double, double,
                     double>())
-      .def("rotator", [](const motor_t &arg) { return ega::rotator_t(arg); });
+      .def("rotator", [](const motor_t &arg) { return ega::rotator_t(arg); })
+
+      ;
 }
 
 void add_dual_line(py::module &m) {
   add_conformal_multivector<dual_line_t>(m, "DualLine")
-      .def(py::init<double, double, double, double, double, double>());
+      .def(py::init<double, double, double, double, double, double>())
+      .def("__add__",
+           [](const dual_line_t &a, double b) { return motor_t(a + b); })
+      .def("__radd__",
+           [](const dual_line_t &a, double b) { return motor_t(a + b); });
 }
+
 void add_line(py::module &m) {
   add_conformal_multivector<line_t>(m, "Line").def(
       py::init<double, double, double, double, double, double>());
@@ -148,6 +155,16 @@ void add_generate(py::module &m) {
   });
   generate.def("cayley",
                [](const cga::dual_line_t &b) { return Gen::cayley(b); });
+
+  generate.def("normalize", [](const motor_t &m) {
+    double norm = m.norm();
+    motor_t b = m * ~m;
+    double s0 = b[0];
+    double s4 = b[7];
+    auto s_inv = scalar_t{(1.0) / norm} *
+                 (scalar_t{(1.0)} + direction_trivector_t{-(s4 / (2.0 * s0))});
+    return m * s_inv;
+  });
 }
 
 void add_operate(py::module &m) {
@@ -156,6 +173,6 @@ void add_operate(py::module &m) {
   operate.def("axis_angle", [](const cga::circle_t &c) { return Op::AA(c); });
 }
 
-} // namespace cga
+}  // namespace cga
 
-} // namespace pyversor
+}  // namespace pyversor

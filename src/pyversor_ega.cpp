@@ -24,6 +24,10 @@ void add_bivector(py::module &m) {
   using vsr::nga::Gen;
   add_euclidean_multivector<bivector_t>(m, "Bivector")
       .def(py::init<double, double, double>())
+      .def("__add__",
+           [](const bivector_t &a, double b) { return rotator_t(a + b); })
+      .def("__radd__",
+           [](const bivector_t &a, double b) { return rotator_t(a + b); })
       .def("exp", [](const bivector_t &b) { return Gen::rot(b); });
 }
 
@@ -59,6 +63,6 @@ void add_generate(py::module &m) {
   generate.def("exp", [](const bivector_t &b) { return Gen::rot(b); });
 }
 
-} // namespace ega
+}  // namespace ega
 
-} // namespace pyversor
+}  // namespace pyversor
