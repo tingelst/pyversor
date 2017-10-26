@@ -56,9 +56,6 @@ void add_generate(py::module &m) {
   generate.def("ratio", [](const vector_t &a, const vector_t &b) {
     return vsr::nga::Gen::ratio(a, b);
   });
-  // generate.def("ratio", [](const bivector_t &a, const bivector_t &b) {
-  //   return vsr::nga::Gen::ratio(a, b);
-  // });
   generate.def("log", [](const rotator_t &m) { return Gen::log(m); });
   generate.def("exp", [](const bivector_t &b) { return Gen::rot(b); });
 }
