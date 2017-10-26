@@ -414,8 +414,7 @@ struct Gen {
 
 // Operations on Round types (Points, Point Pairs, Circles, Spheres, N-Spheres)
 struct Round {
-  /*! Null Point from Arbitrary Multivector
-   */
+  // Null Point from Arbitrary Multivector
   template <class A, class B>
   static constexpr GAPnt<A> null(const Multivector<A, B> &v) {
     using TVec = GAVec<A>;
@@ -425,8 +424,7 @@ struct Round {
            TInf(v.template copy<TVec>().wt() / 2.0);
   }
 
-  /*! Or Null Point from Coordinates (x,y,z,...)
-   */
+  // Null Point from Coordinates (x,y,z,...)
   template <class... T>
   static constexpr NPnt<sizeof...(T) + 2> null(T... v) {
     using TVEC = NVec<sizeof...(T) + 2>;
@@ -436,23 +434,18 @@ struct Round {
     return TVEC(v...) + TORI(1) + TINF(TVEC(v...).wt() / 2.0);
   }
 
-  /*! Null Point from Coordinates
-   */
+  // Null Point from Coordinates
   template <class... T>
   static constexpr NPnt<sizeof...(T) + 2> point(T... v) {
     using TVEC = NVec<sizeof...(T) + 2>;
     return null(TVEC(v...));
   }
 
-  /*! Dual Sphere from Radius FIRST and Coordinate Center
-        @param Radius (enter a negative radius for an imaginary sphere)
-        @param any number of coordinates
-
-        Note that radius is the first argument in order to enable construction
-     of
-        a sphere in any dimension (depending upon how many coordinates are fed
-     into this function)
-    */
+  // Dual Sphere from Radius FIRST and Coordinate Center. Enter a negative
+  // radius for an imaginary sphere) @param any number of coordinates Note that
+  // radius is the first argument in order to enable construction of a sphere in
+  // any dimension (depending upon how many coordinates are fed into this
+  // function)
   template <class... T>
   static auto dls(VSR_PRECISION r, T... v) -> NPnt<sizeof...(T) + 2> {
     using TPNT = NPnt<sizeof...(T) + 2>;
@@ -463,15 +456,16 @@ struct Round {
     return s;
   }
   template <class... T>
-  static auto dualSphere(VSR_PRECISION r, T... v) RETURNS(dls(r, v...))
+  static auto dualSphere(VSR_PRECISION r, T... v) {
+    return dls(r, v...);
+  }
 
-      /*! Dual Sphere from Element FIRST and Radius
-          @param Any input Multivector v (function will take first 3 weights)
-          @param Radius (enter a negative radius for an imaginary sphere)
-      */
-      template <class A, class B>
-      static auto dls(const Multivector<A, B> &v, VSR_PRECISION r = 1.0)
-          -> GAPnt<A> {
+  // Dual Sphere from Element FIRST and Radius from any input Multivector v
+  // (function will take first 3 weights). Radius (enter a negative radius for
+  // an imaginary sphere)
+  template <class A, class B>
+  static auto dls(const Multivector<A, B> &v, VSR_PRECISION r = 1.0)
+      -> GAPnt<A> {
     auto s = null(v);
     (r > 0) ? s.template get<bits::infinity<A::dim>()>() -= .5 * (r * r)
             : s.template get<bits::infinity<A::dim>()>() += .5 * (r * r);
@@ -479,49 +473,42 @@ struct Round {
   }
 
   template <class T>
-  static auto dualSphere(const T &t, VSR_PRECISION r = 1.0) RETURNS(dls(t, r))
+  static auto dualSphere(const T &t, VSR_PRECISION r = 1.0) {
+    return dls(t, r);
+  }
 
-      /*! Dual Sphere from Element FIRST and Radius
-          @param Any input Multivector v (function will take first 3 weights)
-          @param Radius (enter a negative radius for an imaginary sphere)
-      */
-      template <class S>
-      static auto sphere(const S &v, VSR_PRECISION r = 1.0) RETURNS(dls(v, r))
+  // Dual Sphere from Element FIRST and Radius from any input Multivector v
+  // (function will take first 3 weights). Radius (enter a negative radius for
+  // an imaginary sphere)
+  template <class S>
+  static auto sphere(const S &v, VSR_PRECISION r = 1.0) {
+    return dls(v, r);
+  }
 
-      /*! Dual Sphere from Point and Radius (faster)
-          @param Point
-          @param Radius (enter a negative radius for an imaginary sphere)
-      */
-      template <class A>
-      static GADls<A> dls_pnt(const GAPnt<A> &p, VSR_PRECISION r = 1.0) {
+  // Dual Sphere from Point and Radius (faster) - (enter a negative radius for
+  // an imaginary sphere)
+  template <class A>
+  static GADls<A> dls_pnt(const GAPnt<A> &p, VSR_PRECISION r = 1.0) {
     GAPnt<A> s = p;
     (r > 0) ? s.template get<bits::infinity<A::dim>()>() -= .5 * (r * r)
             : s.template get<bits::infinity<A::dim>()>() += .5 * (r * r);
     return s;
   }
 
-  /*!
-   Simple Center of A Round Element (not normalized -- use loc or location
-   method)
-  */
+  // Simple Center of A Round Element (not normalized -- use loc or location
+  // method)
   template <class A, class B>
   static constexpr GAPnt<A> center(const Multivector<A, B> &s) {
     return (s / (GAInf<A>(-1) <= s)).template cast<GAPnt<A>>();
   }
 
-  /*!
-   Simple Center of A Round Element (shorthand)
-
-   @sa cga::Round::cen
-  */
+  // Simple Center of A Round Element (shorthand)
   template <class A, class B>
   static constexpr GAPnt<A> cen(const Multivector<A, B> &s) {
     return center(s);
   }
 
-  /*!
-    Location of A Round Element (normalized) (Shorthand)
-  */
+  // Location of A Round Element (normalized) (Shorthand)
   template <class A>
   static constexpr typename A::space::point location(const A &s) {
     return null(cen(s));
@@ -532,22 +519,18 @@ struct Round {
     return location(s);
   }
 
-  /*! Squared Size of a General Round Element (could be negative)
-      @param r input normalized round (dual sphere, point pair, circle, or
-     direct sphere)
-      @param dual duality flag
-  */
+  // Squared Size of a General Round Element (could be negative)
   template <class A>
   static VSR_PRECISION size(const A &r, bool dual) {
     auto s = typename A::space::infinity(1) <= r;
     return ((r * r.inv()) / (s * s) * ((dual) ? -1.0 : 1.0))[0];
   }
-  /*! Radius of Round
-   */
+  // Radius of Round
   template <class T>
   static constexpr VSR_PRECISION radius(const T &s) {
     return sqrt(fabs(size(s, false)));
   }
+
   template <class T>
   static constexpr VSR_PRECISION rad(const T &t) {
     return radius(t);
@@ -562,36 +545,31 @@ struct Round {
     return (r == 0) ? 10000 : 1.0 / rad(s);
   }
 
-  /*! Curvature of Round
-      @param t a Round Element
-  */
-
+  // Curvature of Round
   template <class T>
   static constexpr VSR_PRECISION cur(const T &t) {
     return curvature(t);
   }
 
-  /*! Squared Size of Normalized Dual Sphere (faster than general case)
-      @param Normalized Dual Sphere
-  */
+  // Squared Size of Normalized Dual Sphere (faster than general case)
   template <class A>
   static constexpr VSR_PRECISION dsize(const GAPnt<A> &dls) {
     return (dls * dls)[0];
   }
 
-  /*! Squared distance between two points
-   */
+  // Squared distance between two points
   template <class A>
   static constexpr VSR_PRECISION squaredDistance(const GAPnt<A> &a,
                                                  const GAPnt<A> b) {
     return ((a <= b)[0]) * -2.0;
   }
+
   template <class A>
   static constexpr VSR_PRECISION sqd(const A &a, const A &b) {
     return squaredDistance(a, b);
   }
 
-  /*! Distance between points a and b */
+  // Distance between points a and b
   template <class A>
   static constexpr VSR_PRECISION distance(const GAPnt<A> &a, const GAPnt<A> b) {
     return sqrt(fabs(sqd(a, b)));
@@ -601,19 +579,13 @@ struct Round {
     return distance(a, b);
   }
 
-  /*! Split Points from Point Pair
-      @param PointPair input
-      returns a vector<Pnt>
-  */
+  // Split Points from Point Pair
   template <class A>
   static std::vector<GAPnt<A>> split(const GAPar<A> &pp) {
     std::vector<GAPnt<A>> pair;
-
     VSR_PRECISION r = sqrt(fabs((pp <= pp)[0]));
-
     // dual line in 2d, dual plane in 3d
     auto d = GAInf<A>(-1) <= pp;
-
     GABst<A> bstA;
     bstA = pp;
     GABst<A> bstB;
@@ -633,10 +605,7 @@ struct Round {
     return pair;
   }
 
-  /*! Split Points from Point Pair and normalize
-      @param PointPair input
-      returns a vector<Pnt>
-  */
+  // Split Points from Point Pair and normalize
   template <class A>
   static std::vector<GAPnt<A>> splitLocation(const GAPar<A> &pp) {
     auto tp = split(pp);
@@ -644,12 +613,7 @@ struct Round {
     return tp;
   }
 
-  /*!
-   * Split a point pair
-   * @param Point Pair p- ^ p+
-   * @param bool which one (true returns p+)
-     @todo "true" argument should return first, not second, point
-   * */
+  // Split a point pair Point Pair p- ^ p+
   template <class A>
   static GAPnt<A> split(const GAPar<A> &pp, bool bSecond) {
     VSR_PRECISION r = sqrt(fabs((pp <= pp)[0]));
@@ -661,108 +625,86 @@ struct Round {
     return ((bst) / d).template cast<GAPnt<A>>();
   }
 
-  /*!
-   * Split A Circle into its dual point pair poles
-   */
+  // Split A Circle into its dual point pair poles
   template <class A>
   static std::vector<GAPnt<A>> split(const GACir<A> &nc) {
     return split(nc.dual());
   }
 
-  /*! Direction of Direct Round Element
-       (if applying to null point pair, undualize first or negate result)
-       @param Direct Round
-   */
+  // Direction of Direct Round Element (if applying to null point pair,
+  // undualize first or negate result)
   template <class A>
-  static constexpr auto direction(const A &s)
-      RETURNS(((typename A::space::infinity(-1) <= s) ^
-               typename A::space::infinity(1)))
-      /*! Direction of Round Element (shorthand)
-          @param Direct Round
-      */
-      template <class A>
-      static constexpr auto dir(const A &s) RETURNS(direction(s))
+  static constexpr auto direction(const A &s) {
+    return ((typename A::space::infinity(-1) <= s) ^
+            typename A::space::infinity(1));
+  }
 
-      /*! Carrier Flat of Direct Round Element
-           @param Direct Round
-       * */
-      template <class A>
-      static constexpr auto carrier(const A &s)
-          RETURNS(s ^ typename A::space::infinity(1))
-      /*! Carrier Flat of Direct? Round Element (Shorthand)
-       */
-      template <class A>
-      static constexpr auto car(const A &s) RETURNS(carrier(s))
+  // Direction of Round Element (shorthand)
+  template <class A>
+  static constexpr auto dir(const A &s) {
+    return direction(s);
+  }
 
-      /*! Dual Surround of a Direct or Dual Round Element */
-      template <class A>
-      static constexpr typename A::space::dual_sphere surround(const A &s) {
+  // Carrier Flat of Direct Round Element
+  template <class A>
+  static constexpr auto carrier(const A &s) {
+    return (s ^ typename A::space::infinity(1));
+  }
+
+  // Carrier Flat of Direct? Round Element (Shorthand)
+  template <class A>
+  static constexpr auto car(const A &s) {
+    return carrier(s);
+  }
+
+  // Dual Surround of a Direct or Dual Round Element
+  template <class A>
+  static constexpr typename A::space::dual_sphere surround(const A &s) {
     return typename A::space::dual_sphere(s /
                                           (s ^ typename A::space::infinity(1)));
   }
 
-  /*! Dual Surround of a Direct or Dual Round Element (Shorthand) */
+  // Dual Surround of a Direct or Dual Round Element (Shorthand)
   template <class A>
-  static constexpr auto sur(const A &s) RETURNS(surround(s))
+  static constexpr auto sur(const A &s) {
+    return surround(s);
+  }
 
-      /*!
-       Direct Round From Dual Sphere and Euclidean Bivector
-       Note: round will be imaginary if dual sphere is real . . .
-       */
-      template <class A, class S>
-      static constexpr auto produce(const A &dls, const S &flat) RETURNS(
-          dls ^ ((dls <= (flat.inv() * typename A::space::infinity(1))) * -1.0))
+  // Direct Round From Dual Sphere and Euclidean Bivector Note: round will be
+  // imaginary if dual sphere is real . . .
+  template <class A, class S>
+  static constexpr auto produce(const A &dls, const S &flat) {
+    return dls ^
+           ((dls <= (flat.inv() * typename A::space::infinity(1))) * -1.0);
+  }
 
-      /*!
-        Creates a real round from an imaginary / real round
-       */
-      template <class A>
-      static constexpr auto real(const A &s)
-          RETURNS(produce(Round::dls(Round::loc(s), -Round::rad(Round::sur(s))),
-                          typename A::space::origin(-1) <= Round::dir(s)))
+  // Creates a real round from an imaginary / real round
+  template <class A>
+  static constexpr auto real(const A &s) {
+    return produce(Round::dls(Round::loc(s), -Round::rad(Round::sur(s))),
+                   typename A::space::origin(-1) <= Round::dir(s));
+  }
 
-      /*!
-        Creates an imaginary round from an real round
-       */
-      template <class A>
-      static constexpr auto imag(const A &s)
-          RETURNS(produce(Round::dls(Round::loc(s), Round::rad(Round::sur(s))),
-                          typename A::space::origin(-1) <= Round::dir(s)))
-      /*!
-        Dual Round from Center and Point on Surface
-         @param Center
-         @param point on surface
-       * */
-      template <class A>
-      static constexpr GADls<A> at(const GADls<A> &c, const GADls<A> &p) {
+  // Creates an imaginary round from an real round
+  template <class A>
+  static constexpr auto imag(const A &s) {
+    return produce(Round::dls(Round::loc(s), Round::rad(Round::sur(s))),
+                   typename A::space::origin(-1) <= Round::dir(s));
+  }
+
+  // Dual Round from Center and Point on Surface
+  template <class A>
+  static constexpr GADls<A> at(const GADls<A> &c, const GADls<A> &p) {
     return GADls<A>(p <= (c ^ GAInf<A>(1)));
   }
 
-  //  /*!
-  //  Direct Round From coordinates and Euclidean Bivector
-  //  Note: round will be imaginary if dual sphere is real . . .
-  //  */
-  //  template<bits::type DIM, class B, class A>
-  //  auto round(const CGAMultivector<DIM, B>& s, const A& flat, VSR_PRECISION
-  //  radius=1.0) RETURNS (
-  //     round( dls(s, radius*-1.0), flat );
-  //  )
-
-  /*!
-   Direct Point From Dual Sphere and Euclidean Carrier Flat
-   */
+  // Direct Point From Dual Sphere and Euclidean Carrier Flat
   template <class A>
   static constexpr GAPnt<A> pnt(const GADls<A> &dls, const GAVec<A> &flat) {
     return split(produce(dls, flat), true);  // cout << "y" << endl;
   }
-  /*!
-   Direct Point From Dual Sphere and Euclidean Carrier Flat
-   */
-  // template<class A
 
-  /*! Euclidean Vector of Circle at theta
-      @include euclidean
-  */
+  // Euclidean Vector of Circle at theta
   template <class A>
   static GAVec<A> vec(const GACir<A> &c, VSR_PRECISION theta = 0) {
     using TBIV = GABiv<A>;
@@ -773,37 +715,27 @@ struct Round {
         nga::Gen::rot(TBIV::xz * theta));
   }
 
-  /*! Point Pair on Direct Circle at angle t*/
+  // Point Pair on Direct Circle at angle t
   template <class A>
   static GAPar<A> par_cir(const GACir<A> &c, VSR_PRECISION t) {
     using TBIV = GABiv<A>;
     using TVEC = GAVec<A>;
 
-    /// 1. Calculate normal of Circle
+    // 1. Calculate normal of Circle
     auto normal = TVEC(Round::carrier(c).dual()).unit();
-    /// 2. Find Rotation taking e3 to normal
+    // 2. Find Rotation taking e3 to normal
     auto rot = nga::Gen::ratio(TVEC::z, normal);
-    /// 3. Spin e1 and e12 by same amount, and then rotate e1' in e12' by t
+    // 3. Spin e1 and e12 by same amount, and then rotate e1' in e12' by t
     auto vec = TVEC::x.spin(nga::Gen::rot(TBIV::xy.spin(rot) * t / 2.0) * rot);
-    /// 4. find meet of vec on surrounding sphere of c
+    // 4. find meet of vec on surrounding sphere of c
     return produce(sur(c), vec);
   }
 
-  /*! Point on Circle at angle t*/
+  // Point on Circle at angle t
   template <class A>
   static GAPnt<A> pnt_cir(const GACir<A> &c, VSR_PRECISION t) {
     return null(split(par_cir(c, t), true));
   }
-
-  /*! Point on Circle at angle t*/
-  /* template<bits::type DIM> */
-  /* NPnt<DIM> */
-  /* pointOnCircle(const NCir<DIM>& c, VSR_PRECISION t){ */
-  /*   return null( split( par_cir(c,t), true) ); */
-  /* } */
-
-  /* template<bits::type DIM> */
-  /* NPnt<DIM> pnt_dls( */
 };
 
 /*!
