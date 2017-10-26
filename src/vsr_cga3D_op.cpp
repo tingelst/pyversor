@@ -113,8 +113,9 @@ Mot Gen::mot(const Dll &dll) {
   VSR_PRECISION sc = sin(c);
   VSR_PRECISION cc = cos(c);
 
-  if (ERROR(w, .00000001))
+  if (ERROR(w, .00000001)) {
     return Mot(1, 0, 0, 0, b[3], b[4], b[5], 0); // translation only!
+  }
 
   B = B.unit();
   Vec t(b[3], b[4], b[5]);
@@ -202,8 +203,9 @@ Dll Gen::log(const Mot &m) {
 Dll Gen::log(const Dll &a, const Dll &b, VSR_PRECISION t) {
   Mot m = b / a;
   VSR_PRECISION n = m.rnorm();
-  if (n != 0)
+  if (n != 0) {
     m /= n;
+  }
   return Gen::log(m) * (t / 2.0);
 }
 
@@ -233,8 +235,9 @@ Bst Gen::ratio(const DualSphere &a, const DualSphere &b, bool bFlip) {
   Bst tbst = (b / a).runit();
 
   // if (tbst[0]<0)
-  if (bFlip)
+  if (bFlip) {
     tbst = -tbst; // true unless the one sphere is inside the other
+  }
   auto ss = 2 * (1 + tbst[0]);
   auto n = (ss >= 0 ? sqrt(ss) : -sqrt(-ss));
   return FERROR(n) ? Bst() : (tbst + 1) / n;
@@ -246,8 +249,9 @@ Pair Gen::log(const DualSphere &a, const DualSphere &b, VSR_PRECISION t,
               bool bFlip) {
   Bst tbst = (b / a).runit();
   // if (tbst[0]<0)
-  if (bFlip)
+  if (bFlip) {
     tbst = -tbst; // restrict to positive <R>
+  }
   return Gen::log(tbst) * -t / 2.0;
 }
 
@@ -257,13 +261,14 @@ Pair Gen::atanh2(const Pair &p, VSR_PRECISION cs, bool bCW, bool bTwoPI) {
 
   auto tp = p.wt();
   auto sq = sqrt(fabs(tp));
-  if (tp > 0)
+  if (tp > 0) {
     norm = asinh(sq) / sq;
-  else if (tp < 0) {
-    if (bCW)
+  } else if (tp < 0) {
+    if (bCW) {
       norm = -((bTwoPI ? TWOPI : PI) - atan2(sq, cs)) / sq; // alt direction
-    else
+    } else {
       norm = atan2(sq, cs) / sq;
+    }
   }
   return p * norm;
 }
@@ -276,13 +281,14 @@ VSR_PRECISION Gen::theta(const Bst &b, bool bCW, bool bTwoPI) {
   auto cs = b[0];
   auto tp = p.wt();
   auto sq = sqrt(fabs(tp));
-  if (tp > 0)
+  if (tp > 0) {
     norm = asinh(sq) / sq;
-  else if (tp < 0) {
-    if (bCW)
+  } else if (tp < 0) {
+    if (bCW) {
       norm = -((bTwoPI ? TWOPI : PI) - atan2(sq, cs)) / sq; // alt direction
-    else
+    } else {
       norm = atan2(sq, cs) / sq;
+    }
   }
   return norm;
 }
@@ -323,11 +329,12 @@ Con Gen::ratio(const Circle &a, const Circle &b, bool bFlip, float theta) {
 
     auto sizeB = nga::Round::size(b, false);
     // if circle is orthogonal
-    if (sizeB < 1000 && !FERROR(sizeB))
+    if (sizeB < 1000 && !FERROR(sizeB)) {
       vec = Vec(Round::location(a) - Round::location(b)).unit();
     // or if one is axis of the other
-    else
+    } else {
       vec = Round::vec(a, -theta).unit();
+    }
 
     auto dls = sph.dual();
 
@@ -372,7 +379,7 @@ Con Gen::ratio(const Pair &a, const Pair &b, bool bFlip, float theta) {
 */
 vector<Pair> Gen::split(const Pair &par) {
 
-  typedef decltype(Sphere() + 1) SqDeriv;
+  using SqDeriv = decltype(Sphere() + 1);
 
   vector<Pair> res;
 
@@ -485,8 +492,9 @@ Con Gen::con(const vector<Pair> &log, VSR_PRECISION amt) {
 /*! General Conformal Transformation from a split log*/
 Con Gen::con(const vector<Pair> &log, VSR_PRECISION amtA, VSR_PRECISION amtB) {
   Con tmp = Gen::bst(log[0] * -amtA);
-  if (log.size() > 1)
+  if (log.size() > 1) {
     tmp *= Gen::bst(log[1] * -amtB);
+  }
   return tmp;
 }
 

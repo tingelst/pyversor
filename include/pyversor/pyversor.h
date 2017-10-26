@@ -194,7 +194,7 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
   // });
   t.def(py::pickle(
       [](const T &p) {  // __getstate__
-        /* Return a tuple that fully encodes the state of the object */
+        // Return a tuple that fully encodes the state of the object
         std::vector<double> coeffs;
         for (size_t i = 0; i < T::Num; ++i) {
           coeffs.push_back(p[i]);
@@ -202,8 +202,10 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
         return coeffs;
       },
       [](const std::vector<double> &coeffs) {  // __setstate__
-        if (coeffs.size() != T::Num) throw std::runtime_error("Invalid state!");
-        /* Create a new C++ instance */
+        if (coeffs.size() != T::Num) {
+          throw std::runtime_error("Invalid state!");
+        }
+        // Create a new C++ instance
         T p;
         for (size_t i = 0; i < T::Num; ++i) {
           p[i] = coeffs[i];

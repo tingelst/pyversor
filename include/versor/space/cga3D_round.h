@@ -29,7 +29,7 @@
 // policies, either expressed or implied, of the FreeBSD Project.
 #pragma once
 
-#include <space/cga3D_types.h>
+#include <versor/space/cga3D_types.h>
 #include <versor/detail/generic_op.h>
 
 namespace vsr {
