@@ -32,8 +32,8 @@
 
 #include <versor/detail/algebra.h>
 
-#include <iostream>
 #include <math.h>
+#include <iostream>
 
 namespace vsr {
 
@@ -44,7 +44,8 @@ namespace vsr {
 // data is combined with other methods is determined by their respective basis,
 // in coordination with the algebra.
 
-template <typename algebra_type, typename basis_type> struct Multivector {
+template <typename algebra_type, typename basis_type>
+struct Multivector {
   // Algebra (a metric and a field)
   using algebra = algebra_type;
 
@@ -62,7 +63,8 @@ template <typename algebra_type, typename basis_type> struct Multivector {
   using space = typename algebra::types;
 
   // another type within same algebra
-  template <class B> using MultivectorB = Multivector<algebra, B>;
+  template <class B>
+  using MultivectorB = Multivector<algebra, B>;
 
   // the dual type (product of this and algebra::types::pseudoscalar)
   using Dual = typename algebra::template make_gp<
@@ -103,11 +105,14 @@ template <typename algebra_type, typename basis_type> struct Multivector {
       : Multivector(b.template cast<Multivector<algebra, basis>>()) {}
 
   // immutable get value of blade type IDX
-  template <bits::type IDX> value_t get() const;
+  template <bits::type IDX>
+  value_t get() const;
   // mutable get value of blade type IDX
-  template <bits::type IDX> value_t &get();
+  template <bits::type IDX>
+  value_t &get();
   // set value of blade type IDX
-  template <bits::type IDX> Multivector &set(value_t v);
+  template <bits::type IDX>
+  Multivector &set(value_t v);
 
   /// Reset
   Multivector &reset(value_t v = value_t()) {
@@ -125,15 +130,16 @@ template <typename algebra_type, typename basis_type> struct Multivector {
   Multivector inv() const { return involution(); }
 
   /// Casting to type B
-  template <class B> B cast() const;
+  template <class B>
+  B cast() const;
   /// Copying to type B
-  template <class B> B copy() const;
+  template <class B>
+  B copy() const;
 
   // comparison
   bool operator==(const Multivector &mv) const {
     for (int i = 0; i < Num; ++i) {
-      if (val[i] != mv[i])
-        return false;
+      if (val[i] != mv[i]) return false;
     }
     return true;
   }
@@ -145,44 +151,53 @@ template <typename algebra_type, typename basis_type> struct Multivector {
   }
 
   // geometric product
-  template <class B> auto operator*(const MultivectorB<B> &b) const {
+  template <class B>
+  auto operator*(const MultivectorB<B> &b) const {
     return algebra::gp(*this, b);
   }
 
   // geometric product in place Transformation
-  template <class B> Multivector &operator*=(const MultivectorB<B> &b) {
+  template <class B>
+  Multivector &operator*=(const MultivectorB<B> &b) {
     *this = *this * b;
     return *this;
   }
 
   // outer product
-  template <class B> auto operator^(const MultivectorB<B> &b) const {
+  template <class B>
+  auto operator^(const MultivectorB<B> &b) const {
     return algebra::op(*this, b);
   }
 
   // left contraction inner product
-  template <class B> auto operator<=(const MultivectorB<B> &b) const {
+  template <class B>
+  auto operator<=(const MultivectorB<B> &b) const {
     return algebra::ip(*this, b);
   }
 
   // commutator product
-  template <class B> auto operator%(const MultivectorB<B> &b) const {
+  template <class B>
+  auto operator%(const MultivectorB<B> &b) const {
     return ((*this * b) - (b * (*this))) * .5;
   }
 
   // rotor (even) transformation
-  template <typename B> Multivector spin(const MultivectorB<B> &b) const {
+  template <typename B>
+  Multivector spin(const MultivectorB<B> &b) const {
     return algebra::spin(*this, b);
   }
   // versor (odd) transformation
-  template <typename B> Multivector reflect(const MultivectorB<B> &b) const {
+  template <typename B>
+  Multivector reflect(const MultivectorB<B> &b) const {
     return algebra::reflect(*this, b);
   }
 
-  template <typename B> Multivector sp(const MultivectorB<B> &b) const {
+  template <typename B>
+  Multivector sp(const MultivectorB<B> &b) const {
     return spin(b);
   }
-  template <typename B> Multivector re(const MultivectorB<B> &b) const {
+  template <typename B>
+  Multivector re(const MultivectorB<B> &b) const {
     return reflect(b);
   }
 
@@ -199,7 +214,8 @@ template <typename algebra_type, typename basis_type> struct Multivector {
   }
 
   // division
-  template <class B> auto operator/(const MultivectorB<B> &b) const {
+  template <class B>
+  auto operator/(const MultivectorB<B> &b) const {
     return (*this * !b);
   }
 
@@ -211,27 +227,42 @@ template <typename algebra_type, typename basis_type> struct Multivector {
   Multivector<algebra, typename algebra::vector_basis> null() const;
 
   // rotate in b plane
-  template <class B> Multivector rot(const MultivectorB<B> &b) const;
-  template <class B> Multivector rotate(const MultivectorB<B> &b) const;
+  template <class B>
+  Multivector rot(const MultivectorB<B> &b) const;
+  template <class B>
+  Multivector rotate(const MultivectorB<B> &b) const;
 
-  template <class B> Multivector trs(const MultivectorB<B> &b) const;
-  template <class B> Multivector translate(const MultivectorB<B> &b) const;
+  template <class B>
+  Multivector trs(const MultivectorB<B> &b) const;
+  template <class B>
+  Multivector translate(const MultivectorB<B> &b) const;
 
-  template <class... Ts> Multivector trs(Ts... v) const;
-  template <class... Ts> Multivector translate(Ts... v) const;
+  template <class... Ts>
+  Multivector trs(Ts... v) const;
+  template <class... Ts>
+  Multivector translate(Ts... v) const;
 
-  template <class B> Multivector trv(const MultivectorB<B> &b) const;
-  template <class B> Multivector transverse(const MultivectorB<B> &b) const;
+  template <class B>
+  Multivector trv(const MultivectorB<B> &b) const;
+  template <class B>
+  Multivector transverse(const MultivectorB<B> &b) const;
 
-  template <class... Ts> Multivector trv(Ts... v) const;
-  template <class... Ts> Multivector transverse(Ts... v) const;
+  template <class... Ts>
+  Multivector trv(Ts... v) const;
+  template <class... Ts>
+  Multivector transverse(Ts... v) const;
 
-  template <class B> Multivector mot(const MultivectorB<B> &b) const;
-  template <class B> Multivector motor(const MultivectorB<B> &b) const;
-  template <class B> Multivector twist(const MultivectorB<B> &b) const;
+  template <class B>
+  Multivector mot(const MultivectorB<B> &b) const;
+  template <class B>
+  Multivector motor(const MultivectorB<B> &b) const;
+  template <class B>
+  Multivector twist(const MultivectorB<B> &b) const;
 
-  template <class B> Multivector bst(const MultivectorB<B> &b) const;
-  template <class B> Multivector boost(const MultivectorB<B> &b) const;
+  template <class B>
+  Multivector bst(const MultivectorB<B> &b) const;
+  template <class B>
+  Multivector boost(const MultivectorB<B> &b) const;
 
   template <class B>
   Multivector dil(const MultivectorB<B> &b, VSR_PRECISION t) const;
@@ -249,29 +280,25 @@ template <typename algebra_type, typename basis_type> struct Multivector {
   value_t rwt() const { return (*this <= ~(*this))[0]; }
   value_t norm() const {
     value_t a = rwt();
-    if (a < 0)
-      return 0;
+    if (a < 0) return 0;
     return sqrt(a);
   }
 
   value_t rnorm() const {
     value_t a = rwt();
-    if (a < 0)
-      return -sqrt(-a);
+    if (a < 0) return -sqrt(-a);
     return sqrt(a);
   }
 
   Multivector unit() const {
     value_t t = sqrt(fabs((*this <= *this)[0]));
-    if (t == 0)
-      return Multivector();
+    if (t == 0) return Multivector();
     return *this / t;
   }
 
   Multivector runit() const {
     value_t t = rnorm();
-    if (t == 0)
-      return Multivector();
+    if (t == 0) return Multivector();
     return *this / t;
   }
 
@@ -293,15 +320,13 @@ template <typename algebra_type, typename basis_type> struct Multivector {
 
   Multivector operator+(const Multivector &a) const {
     Multivector tmp;
-    for (int i = 0; i < Num; ++i)
-      tmp[i] = (*this)[i] + a[i];
+    for (int i = 0; i < Num; ++i) tmp[i] = (*this)[i] + a[i];
     return tmp;
   }
 
   Multivector operator-(const Multivector &a) const {
     Multivector tmp;
-    for (int i = 0; i < Num; ++i)
-      tmp[i] = (*this)[i] - a[i];
+    for (int i = 0; i < Num; ++i) tmp[i] = (*this)[i] - a[i];
     return tmp;
   }
 
@@ -314,13 +339,11 @@ template <typename algebra_type, typename basis_type> struct Multivector {
   }
 
   Multivector &operator-=(const Multivector &b) {
-    for (int i = 0; i < Num; ++i)
-      (*this)[i] -= b[i];
+    for (int i = 0; i < Num; ++i) (*this)[i] -= b[i];
     return *this;
   }
   Multivector &operator+=(const Multivector &b) {
-    for (int i = 0; i < Num; ++i)
-      (*this)[i] += b[i];
+    for (int i = 0; i < Num; ++i) (*this)[i] += b[i];
     return *this;
   }
 
@@ -369,7 +392,7 @@ template <typename algebra_type, typename basis_type> struct Multivector {
 
   friend ostream &operator<<(ostream &os, const Multivector &m) {
     for (int i = 0; i < Num; ++i) {
-      os << m[i] << " "; // std::endl;
+      os << m[i] << " ";  // std::endl;
     }
     return os;
   }
@@ -387,8 +410,7 @@ template <typename Algebra, typename B>
 template <class A>
 A Multivector<Algebra, B>::copy() const {
   A tmp;
-  for (int i = 0; i < A::basis::Num; ++i)
-    tmp[i] = (*this)[i];
+  for (int i = 0; i < A::basis::Num; ++i) tmp[i] = (*this)[i];
   return tmp;
 }
 
@@ -406,35 +428,35 @@ typename Algebra::value_t Multivector<Algebra, B>::get() const {
 }
 template <typename Algebra, typename B>
 template <bits::type IDX>
-Multivector<Algebra, B> &
-Multivector<Algebra, B>::set(typename Algebra::value_t v) {
+Multivector<Algebra, B> &Multivector<Algebra, B>::set(
+    typename Algebra::value_t v) {
   get<IDX>() = v;
   return *this;
 }
 
 template <typename Algebra, typename B>
-Multivector<Algebra, B>
-    Multivector<Algebra, B>::x = Multivector<Algebra, B>().template set<1>(1);
+Multivector<Algebra, B> Multivector<Algebra, B>::x =
+    Multivector<Algebra, B>().template set<1>(1);
 
 template <typename Algebra, typename B>
-Multivector<Algebra, B>
-    Multivector<Algebra, B>::y = Multivector<Algebra, B>().template set<2>(1);
+Multivector<Algebra, B> Multivector<Algebra, B>::y =
+    Multivector<Algebra, B>().template set<2>(1);
 
 template <typename Algebra, typename B>
-Multivector<Algebra, B>
-    Multivector<Algebra, B>::z = Multivector<Algebra, B>().template set<4>(1);
+Multivector<Algebra, B> Multivector<Algebra, B>::z =
+    Multivector<Algebra, B>().template set<4>(1);
 
 template <typename Algebra, typename B>
-Multivector<Algebra, B>
-    Multivector<Algebra, B>::xy = Multivector<Algebra, B>().template set<3>(1);
+Multivector<Algebra, B> Multivector<Algebra, B>::xy =
+    Multivector<Algebra, B>().template set<3>(1);
 
 template <typename Algebra, typename B>
-Multivector<Algebra, B>
-    Multivector<Algebra, B>::xz = Multivector<Algebra, B>().template set<5>(1);
+Multivector<Algebra, B> Multivector<Algebra, B>::xz =
+    Multivector<Algebra, B>().template set<5>(1);
 
 template <typename Algebra, typename B>
-Multivector<Algebra, B>
-    Multivector<Algebra, B>::yz = Multivector<Algebra, B>().template set<6>(1);
+Multivector<Algebra, B> Multivector<Algebra, B>::yz =
+    Multivector<Algebra, B>().template set<6>(1);
 
 // unary operations
 
@@ -514,7 +536,8 @@ using GATsd = Multivector<algebra, typename algebra::types::tsd>;
 template <typename algebra>
 using GAEucPss = Multivector<algebra, typename algebra::types::eucpss>;
 
-template <typename algebra> struct GAE {
+template <typename algebra>
+struct GAE {
   template <bits::type... NN>
   using e = typename algebra::types::template e<NN...>;
 };
@@ -546,7 +569,8 @@ using euclidean_trivector = GATri<euclidean<dim, T>>;
 template <bits::type dim, typename T = VSR_PRECISION>
 using euclidean_rotor = GARot<euclidean<dim, T>>;
 
-template <typename T = VSR_PRECISION> struct NE {
+template <typename T = VSR_PRECISION>
+struct NE {
   template <bits::type... NN>
   using e = typename GAE<euclidean<bits::dimOf(bits::BladeMaker<NN...>::type),
                                    T>>::template e<NN...>;
@@ -619,4 +643,4 @@ using NMot = GAMot<conformal<N, T>>;
 template <bits::type N, typename T = VSR_PRECISION>
 using NCon = GACon<conformal<N, T>>;
 
-} // namespace vsr
+}  // namespace vsr
