@@ -38,13 +38,13 @@ namespace vsr {
 
 namespace nga {
 
-/*!
- *  Projection from ND Euclidean down to 3D
- */
+// Projection from ND Euclidean down to 3D
 template <int DIM>
 struct Proj {
-  typedef NEVec<DIM> TVec;         ///< ND Vector Type
-  typedef NEVec<DIM - 1> OneDown;  ///< Next Projection Down
+  // ND Vector Type
+  typedef NEVec<DIM> TVec;
+  // Next Projection Down
+  typedef NEVec<DIM - 1> OneDown;
 
   static auto Call(VSR_PRECISION dist, const TVec &v) {
     return (Proj<DIM - 1>::Call(
@@ -797,41 +797,21 @@ struct Flat {
 
 // Generic ND Operations on a tangent
 struct Tangent {
-  //    /*! Direction of Tangent Element (similar formulation to Rounds)
-  //        @ingroup direction
-  //
-  //        @param a Direct Tangent Element
-  //        @return @ref direction type
-  //    */
-  //    template <class A>
-  //    static constexpr auto dir (const A& a) RETURNS (
-  //        ( typename A::space::infinity(-1) <= a ) ^ typename
-  //        A::space::infinity(1)
-  //    )
-  //
-  /*! Location of Tangent Element
-      @ingroup round
-
-      similar formulation to Rounds
-  */
+  // Location of Tangent Element
   template <class A>
   static constexpr typename A::space::point loc(const A &s) {
     return (s / typename A::space::infinity(-1) <= s);
   }
 
-  /*! Tangent Element of A Direct Round r at Point p
-
-      @param r DIRECT ND Round Element e.g. vsr::cga::Sphere or vsr::cga::Circle
-      @param p ND point e.g. vsr::cga::Point
-  */
+  // Tangent Element of A Direct Round r at Point p
   template <class A>
-  static constexpr auto at(const A &r, const typename A::space::point &p)
-      RETURNS(p <= r.inv())
+  static constexpr auto at(const A &r, const typename A::space::point &p) {
+    return p <= r.inv();
+  }
 
-      /*! Weight of Tangent Element
-       */
-      template <class A>
-      static typename A::value_t wt(const A &s) {
+  // Weight of Tangent Element
+  template <class A>
+  static typename A::value_t wt(const A &s) {
     using TOri = typename A::space::origin;
     return (TOri(1) <= Round::dir(s)).wt();
   }
@@ -839,9 +819,6 @@ struct Tangent {
 
 }  // namespace nga
 
-//------------------------------------------
-
-// METHODS (MOTORS IMPLEMENTED SEPARATELY, IN SPECIFIC INSTANTIATIONS)
 template <class Algebra, class B>
 Multivector<Algebra, typename Algebra::vector_basis>
 Multivector<Algebra, B>::null() const {
