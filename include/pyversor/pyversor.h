@@ -70,18 +70,20 @@ using scalar_t = cga_t::make_grade<0>;
 using vector_t = cga_t::make_grade<1>;
 using point_t = vector_t;
 using dual_sphere_t = vector_t;
-using bivector_t = cga_t::make_grade<2>;
+using bivector_t = vsr::cga::Par;;
 using point_pair_t = bivector_t;
-using trivector_t = cga_t::make_grade<3>;
+using trivector_t = vsr::cga::Cir;
 using circle_t = trivector_t;
-using quadvector_t = cga_t::make_grade<4>;
+using quadvector_t = vsr::cga::Sphere;
 using sphere_t = quadvector_t;
-using pseudoscalar_t = cga_t::make_grade<5>;
+using pseudoscalar_t = vsr::cga::Pss;
 using motor_t = vsr::cga::Mot;
 using dual_line_t = vsr::cga::Dll;
 using line_t = vsr::cga::Lin;
 using dual_plane_t = vsr::cga::Dlp;
 using plane_t = vsr::cga::Pln;
+using direction_vector_t = vsr::cga::Drv;
+using direction_bivector_t = vsr::cga::Drb;
 using direction_trivector_t = vsr::cga::Drt;
 using multivector_t =
     vsr::Multivector<cga_t, vsr::Basis<0, 1, 2, 4, 8, 16, 3, 5, 6, 9, 10, 12,
@@ -98,6 +100,9 @@ void add_dual_line(py::module &m);
 void add_line(py::module &m);
 void add_dual_plane(py::module &m);
 void add_plane(py::module &m);
+void add_direction_vector(py::module &m);
+void add_direction_bivector(py::module &m);
+void add_direction_trivector(py::module &m);
 void add_multivector(py::module &m);
 void add_round(py::module &m);
 void add_flat(py::module &m);
@@ -194,7 +199,6 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
   // });
   t.def(py::pickle(
       [](const T &p) {  // __getstate__
-        // Return a tuple that fully encodes the state of the object
         std::vector<double> coeffs;
         for (size_t i = 0; i < T::Num; ++i) {
           coeffs.push_back(p[i]);
