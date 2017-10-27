@@ -53,12 +53,14 @@ before_install:
   fi
 install:
 - |
-  if [ -n "$PYTHON" ]; then
-    python setup.py sdist
-    pip install --verbose dist/*.tar.gz
-  elif [ -n "$CONDA" ]; then
-    conda build conda.recipe
-    conda install --use-local pyversor
-  fi
-script:
-- python tests/test.py
+  mkdir build && cd build && cmake .. && cmake --build .
+  #if [ -n "$PYTHON" ]; then
+  #  mkdir build && cd build && cmake .. && cmake --build .
+  #  python setup.py sdist
+  #  pip install --verbose dist/*.tar.gz
+  #elif [ -n "$CONDA" ]; then
+  #  conda build conda.recipe
+  #  conda install --use-local pyversor
+  #fi
+#script:
+#- python tests/test.py
