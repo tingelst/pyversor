@@ -33,6 +33,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/numpy.h>
 
 #include <versor/space/cga3D_op.h>
 #include <versor/space/cga3D_round.h>
@@ -70,7 +71,8 @@ using scalar_t = cga_t::make_grade<0>;
 using vector_t = cga_t::make_grade<1>;
 using point_t = vector_t;
 using dual_sphere_t = vector_t;
-using bivector_t = vsr::cga::Par;;
+using bivector_t = vsr::cga::Par;
+;
 using point_pair_t = bivector_t;
 using trivector_t = vsr::cga::Cir;
 using circle_t = trivector_t;
@@ -185,18 +187,23 @@ py::class_<T> add_multivector(py::module &m, const std::string &name) {
   t.def("__repr__", [name](const T &arg) {
     std::stringstream ss;
     ss.precision(4);
-    ss << name << "([";
+    ss << name << "(";
     for (int i = 0; i < arg.Num - 1; ++i) {
       ss << arg[i] << ", ";
     }
-    ss << arg[arg.Num - 1] << "])";
+    ss << arg[arg.Num - 1] << ")";
     return ss.str();
   });
-  // t.def_buffer([](T &arg) {
-  //   return py::buffer_info(
-  //       &arg.val[0], sizeof(double), py::format_descriptor<double>::format(),
-  //       1, {static_cast<unsigned long>(arg.Num)}, {sizeof(double)});
-  // });
+  t.def("toarray", [](const T &arg) {
+    auto array = py::array_t<double>(T::Num);
+    auto buffer = array.request();
+    auto ptr = reinterpret_cast<double *>(buffer.ptr);
+    for (size_t i = 0; i < T::Num; ++i) {
+      ptr[i] = arg[i];
+    }
+    return array;
+
+  });
   t.def(py::pickle(
       [](const T &p) {  // __getstate__
         std::vector<double> coeffs;

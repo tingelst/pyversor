@@ -110,7 +110,8 @@ struct round {
   static void add_split(module_t &m) {
     using vsr::cga::Round;
     m.def("split", [](const round_t &a) { return Round::split(a); });
-    m.def("split_location", [](const round_t &a) { return Round::splitLocation(a); });
+    m.def("split_location",
+          [](const round_t &a) { return Round::splitLocation(a); });
   }
 
   template <typename round_t = dual_sphere_t, typename module_t = py::module>
