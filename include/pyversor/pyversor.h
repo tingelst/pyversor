@@ -119,6 +119,20 @@ void add_operate(py::module &m);
 }  // namespace cga
 
 template <typename T>
+struct outer_product {
+  template <typename A, typename module_t>
+  static void add(module_t &m) {
+    m.def("outer2", [](const T &lhs, const A &rhs) { return lhs ^ rhs; });
+  }
+
+  template <typename A, typename B, typename... Cs, typename module_t>
+  static void add(module_t &m) {
+    add<A>(m);
+    add<B, Cs...>(m);
+  }
+};
+
+template <typename T>
 py::class_<T> add_multivector(py::module &m, const std::string &name) {
   auto t = py::class_<T>(m, name.c_str(), py::buffer_protocol());
   t.def(py::init<const ega::multivector_t &>());

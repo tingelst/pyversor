@@ -145,6 +145,7 @@ void add_vector(py::module &m) {
   round::add_distance<vector_t>(t);
   round::add_squared_distance<vector_t>(t);
   round::add_size<vector_t, true>(t);
+  outer_product<vector_t>::add<bivector_t, trivector_t, quadvector_t, origin_t, infinity_t>(t);
 }
 
 void add_bivector(py::module &m) {
