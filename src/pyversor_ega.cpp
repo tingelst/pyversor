@@ -14,10 +14,25 @@ void add_submodule(py::module &m) {
   add_generate(ega);
 }
 
+template <typename T>
+struct outer_product {
+  template <typename A, typename module_t>
+  static void add(module_t &m) {
+    m.def("outer2", [](const T &lhs, const A &rhs) { return lhs ^ rhs; });
+  }
+
+  template <typename A, typename B, typename... Cs, typename module_t>
+  static void add(module_t &m) {
+    add<A>(m);
+    add<B, Cs...>(m);
+  }
+};
+
 void add_vector(py::module &m) {
-  add_euclidean_multivector<vector_t>(m, "Vector")
-      .def(py::init<double, double, double>())
-      .def("null", &vector_t::null);
+  auto t = add_euclidean_multivector<vector_t>(m, "Vector");
+  t.def(py::init<double, double, double>());
+  t.def("null", &vector_t::null);
+  outer_product<vector_t>::add<vector_t, bivector_t>(t);
 }
 
 void add_bivector(py::module &m) {

@@ -16,6 +16,8 @@ void add_submodule(py::module &m) {
   add_line(cga);
   add_dual_plane(cga);
   add_plane(cga);
+  add_origin(cga);
+  add_infinity(cga);
   // add_direction_vector(cga);
   // add_direction_bivector(cga);
   // add_direction_trivector(cga);
@@ -179,6 +181,16 @@ void add_quadvector(py::module &m) {
   round::add_radius_center_location<quadvector_t>(t);
   round::add_normalize<quadvector_t>(t);
   round::add_size<quadvector_t, false>(t);
+}
+
+void add_origin(py::module &m) {
+  auto t = py::class_<origin_t>(m, "Origin");
+  t.def(py::init<double>());
+}
+
+void add_infinity(py::module &m) {
+  auto t = py::class_<infinity_t>(m, "Infinity");
+  t.def(py::init<double>());
 }
 
 void add_motor(py::module &m) {

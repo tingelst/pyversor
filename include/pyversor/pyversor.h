@@ -72,7 +72,6 @@ using vector_t = cga_t::make_grade<1>;
 using point_t = vector_t;
 using dual_sphere_t = vector_t;
 using bivector_t = vsr::cga::Par;
-;
 using point_pair_t = bivector_t;
 using trivector_t = vsr::cga::Cir;
 using circle_t = trivector_t;
@@ -87,6 +86,9 @@ using plane_t = vsr::cga::Pln;
 using direction_vector_t = vsr::cga::Drv;
 using direction_bivector_t = vsr::cga::Drb;
 using direction_trivector_t = vsr::cga::Drt;
+using origin_t = vsr::cga::Ori;
+using infinity_t = vsr::cga::Inf;
+
 using multivector_t =
     vsr::Multivector<cga_t, vsr::Basis<0, 1, 2, 4, 8, 16, 3, 5, 6, 9, 10, 12,
                                        17, 18, 20, 24, 7, 11, 13, 14, 19, 21,
@@ -105,6 +107,8 @@ void add_plane(py::module &m);
 void add_direction_vector(py::module &m);
 void add_direction_bivector(py::module &m);
 void add_direction_trivector(py::module &m);
+void add_origin(py::module &m);
+void add_infinity(py::module &m);
 void add_multivector(py::module &m);
 void add_round(py::module &m);
 void add_flat(py::module &m);
