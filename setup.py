@@ -4,7 +4,7 @@ import sys
 import platform
 import subprocess
 
-from setuptools import setup, Extension
+from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
 
@@ -55,11 +55,9 @@ class CMakeBuild(build_ext):
         elif platform.system() == "Darwin":
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
             cmake_args += ['-DCMAKE_CXX_COMPILER=clang++']
-            cmake_args += ['-DCMAKE_C_COMPILER=clang']
         else:
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
-            cmake_args += ['-DCMAKE_CXX_COMPILER=g++-5']
-            cmake_args += ['-DCMAKE_C_COMPILER=gcc-5']
+            cmake_args += ['-DCMAKE_CXX_COMPILER=g++']
             build_args += ['--', '-j2']
 
         env = os.environ.copy()
@@ -82,6 +80,7 @@ setup(
     author_email='lars.tingelstad@ntnu.no',
     description='Python bindings for the Versor Geometric Algebra',
     long_description='',
-    ext_modules=[CMakeExtension('pyversor')],
+    packages=find_packages(exclude=['tests']),
+    ext_modules=[CMakeExtension('__pyversor__')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False, )

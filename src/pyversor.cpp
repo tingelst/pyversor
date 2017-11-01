@@ -2,7 +2,7 @@
 
 namespace pyversor {
 
-PYBIND11_MODULE(pyversor_, m) {
+PYBIND11_MODULE(__pyversor__, m) {
   ega::add_submodule(m);
   cga::add_submodule(m);
 }
