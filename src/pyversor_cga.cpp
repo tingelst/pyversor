@@ -6,17 +6,18 @@ namespace cga {
 
 void add_submodule(py::module &m) {
   auto cga = m.def_submodule("cga");
-  add_vector(cga);
-  add_bivector(cga);
-  add_trivector(cga);
-  add_quadvector(cga);
-  add_multivector(cga);
-  add_motor(cga);
-  add_dual_line(cga);
-  add_line(cga);
-  add_dual_plane(cga);
+  // add_vector(cga);
+  // add_bivector(cga);
+  // add_trivector(cga);
+  // add_quadvector(cga);
+  // add_multivector(cga);
+  // add_motor(cga);
+  // add_dual_line(cga);
+  // add_line(cga);
+  add_flat_point(cga);
+  // add_dual_plane(cga);
   add_plane(cga);
-  add_origin(cga);
+  // add_origin(cga);
   add_infinity(cga);
   // add_direction_vector(cga);
   // add_direction_bivector(cga);
@@ -28,160 +29,55 @@ void add_submodule(py::module &m) {
   add_operate(cga);
 }
 
-struct round {
-  template <typename round_t, typename module_t = py::module>
-  static void add_distance(module_t &m) {
-    using vsr::cga::Round;
-    m.def("distance", [](const round_t &a, const round_t &b) {
-      return Round::distance(a, b);
-    });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_squared_distance(module_t &m) {
-    using vsr::cga::Round;
-    m.def("squared_distance", [](const round_t &a, const round_t &b) {
-      return Round::squaredDistance(a, b);
-    });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_location(module_t &m) {
-    using vsr::cga::Round;
-    m.def("location", [](const round_t &a) { return Round::location(a); });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_center(module_t &m) {
-    using vsr::cga::Round;
-    m.def("center", [](const round_t &a) { return Round::center(a); });
-  }
-
-  template <typename round_t, bool dual, typename module_t = py::module>
-  static void add_size(module_t &m) {
-    using vsr::cga::Round;
-    m.def("size", [](const round_t &a) { return Round::size(a, dual); });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_radius(module_t &m) {
-    using vsr::cga::Round;
-    m.def("radius", [](const round_t &a) { return Round::radius(a); });
-    // Inverse of radius
-    m.def("curvature", [](const round_t &a) { return Round::curvature(a); });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_null(module_t &m) {
-    using vsr::cga::Round;
-    m.def("null", [](const round_t &a) { return Round::null(a); });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_carrier(module_t &m) {
-    using vsr::cga::Round;
-    m.def("carrier", [](const round_t &a) { return Round::carrier(a); });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_normalize(module_t &m) {
-    using vsr::cga::Round;
-    m.def("normalize", [](const round_t &a) { return Round::normalize(a); });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_renormalize(module_t &m) {
-    using vsr::cga::Round;
-    m.def("renormalize",
-          [](const round_t &a) { return Round::renormalize(a); });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_surround(module_t &m) {
-    using vsr::cga::Round;
-    m.def("surround", [](const round_t &a) { return Round::surround(a); });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_direction(module_t &m) {
-    using vsr::cga::Round;
-    m.def("direction", [](const round_t &a) { return Round::direction(a); });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_split(module_t &m) {
-    using vsr::cga::Round;
-    m.def("split", [](const round_t &a) { return Round::split(a); });
-    m.def("split_location",
-          [](const round_t &a) { return Round::splitLocation(a); });
-  }
-
-  template <typename round_t = dual_sphere_t, typename module_t = py::module>
-  static void add_produce(module_t &m) {
-    using vsr::cga::Round;
-    m.def("produce", [](const round_t &a, const ega::vector_t &b) {
-      return Round::produce(a, b);
-    });
-    m.def("produce", [](const round_t &a, const ega::bivector_t &b) {
-      return Round::produce(a, b);
-    });
-  }
-
-  template <typename round_t, typename module_t = py::module>
-  static void add_radius_center_location(module_t &m) {
-    add_radius<round_t>(m);
-    add_center<round_t>(m);
-    add_location<round_t>(m);
-  }
-};
-
 void add_vector(py::module &m) {
-  auto t = add_conformal_multivector<vector_t>(m, "Vector");
-  t.def(py::init<double, double, double, double, double>());
-  round::add_null<vector_t>(t);
-  round::add_radius_center_location<vector_t>(t);
-  round::add_produce<vector_t>(t);
-  round::add_normalize<vector_t>(t);
-  round::add_distance<vector_t>(t);
-  round::add_squared_distance<vector_t>(t);
-  round::add_size<vector_t, true>(t);
-  outer_product<vector_t>::add<bivector_t, trivector_t, quadvector_t, origin_t, infinity_t>(t);
+  // auto t = add_conformal_multivector<vector_t>(m, "Vector");
+  // t.def(py::init<double, double, double, double, double>());
+  // round::add_null<vector_t>(t);
+  // round::add_radius_center_location<vector_t>(t);
+  // round::add_produce<vector_t>(t);
+  // round::add_normalize<vector_t>(t);
+  // round::add_distance<vector_t>(t);
+  // round::add_squared_distance<vector_t>(t);
+  // round::add_size<vector_t, true>(t);
+  // outer_product<vector_t>::add<bivector_t, trivector_t, quadvector_t,
+  // origin_t,
+  //                              infinity_t>(t);
 }
 
 void add_bivector(py::module &m) {
   auto t = add_conformal_multivector<bivector_t>(m, "Bivector");
   t.def(py::init<double, double, double, double, double, double, double, double,
                  double, double>());
-  round::add_radius_center_location<bivector_t>(t);
-  round::add_carrier<bivector_t>(t);
-  round::add_surround<bivector_t>(t);
-  round::add_normalize<bivector_t>(t);
-  round::add_renormalize<bivector_t>(t);
-  round::add_direction<bivector_t>(t);
-  round::add_split<bivector_t>(t);
-  round::add_size<bivector_t, true>(t);
+  // round::add_radius_center_location<bivector_t>(t);
+  // round::add_carrier<bivector_t>(t);
+  // round::add_surround<bivector_t>(t);
+  // round::add_normalize<bivector_t>(t);
+  // round::add_renormalize<bivector_t>(t);
+  // round::add_direction<bivector_t>(t);
+  // round::add_split<bivector_t>(t);
+  // round::add_size<bivector_t, true>(t);
 }
 
 void add_trivector(py::module &m) {
   auto t = add_conformal_multivector<trivector_t>(m, "Trivector");
   t.def(py::init<double, double, double, double, double, double, double, double,
                  double, double>());
-  round::add_radius_center_location<trivector_t>(t);
-  round::add_carrier<trivector_t>(t);
-  round::add_surround<trivector_t>(t);
-  round::add_normalize<trivector_t>(t);
-  round::add_renormalize<trivector_t>(t);
-  round::add_direction<trivector_t>(t);
-  round::add_split<trivector_t>(t);
-  round::add_size<trivector_t, false>(t);
+  // round::add_radius_center_location<trivector_t>(t);
+  // round::add_carrier<trivector_t>(t);
+  // round::add_surround<trivector_t>(t);
+  // round::add_normalize<trivector_t>(t);
+  // round::add_renormalize<trivector_t>(t);
+  // round::add_direction<trivector_t>(t);
+  // round::add_split<trivector_t>(t);
+  // round::add_size<trivector_t, false>(t);
 }
 
 void add_quadvector(py::module &m) {
   auto t = add_conformal_multivector<quadvector_t>(m, "Quadvector");
   t.def(py::init<double, double, double, double, double>());
-  round::add_radius_center_location<quadvector_t>(t);
-  round::add_normalize<quadvector_t>(t);
-  round::add_size<quadvector_t, false>(t);
+  // round::add_radius_center_location<quadvector_t>(t);
+  // round::add_normalize<quadvector_t>(t);
+  // round::add_size<quadvector_t, false>(t);
 }
 
 void add_origin(py::module &m) {
@@ -248,6 +144,11 @@ void add_line(py::module &m) {
   flat::add_direction<line_t>(t);
 }
 
+void add_flat_point(py::module &m) {
+  auto t = add_conformal_multivector<flat_point_t>(m, "FlatPoint");
+  t.def(py::init<double, double, double, double>());
+}
+
 void add_dual_plane(py::module &m) {
   auto t = add_conformal_multivector<dual_plane_t>(m, "DualPlane");
   t.def(py::init<double, double, double, double>());
@@ -293,42 +194,6 @@ void add_multivector(py::module &m) {
                     double, double, double, double>());
 }
 
-void add_round(py::module &m) {
-  using vsr::cga::Round;
-  auto t = m.def_submodule("round");
-  round::add_null<ega::vector_t>(t);
-  round::add_null<cga::vector_t>(t);
-  round::add_distance<vector_t>(m);
-  round::add_squared_distance<vector_t>(m);
-  round::add_radius_center_location<dual_sphere_t>(t);
-  round::add_radius_center_location<sphere_t>(t);
-  round::add_radius_center_location<point_pair_t>(t);
-  round::add_radius_center_location<circle_t>(t);
-
-  round::add_normalize<dual_sphere_t>(t);
-  round::add_normalize<sphere_t>(t);
-  round::add_normalize<point_pair_t>(t);
-  round::add_normalize<circle_t>(t);
-
-  round::add_size<dual_sphere_t, true>(t);
-  round::add_size<sphere_t, false>(t);
-  round::add_size<point_pair_t, true>(t);
-  round::add_size<circle_t, false>(t);
-
-  round::add_carrier<point_pair_t>(t);
-  round::add_carrier<circle_t>(t);
-  round::add_surround<point_pair_t>(t);
-  round::add_surround<circle_t>(t);
-  round::add_renormalize<point_pair_t>(t);
-  round::add_renormalize<circle_t>(t);
-  round::add_direction<point_pair_t>(t);
-  round::add_direction<circle_t>(t);
-  round::add_split<point_pair_t>(t);
-  round::add_split<circle_t>(t);
-
-  round::add_produce<vector_t>(t);
-}
-
 void add_flat(py::module &m) {
   auto t = m.def_submodule("flat");
   flat::add_location<dual_plane_t, true>(t);
@@ -368,6 +233,6 @@ void add_operate(py::module &m) {
   operate.def("axis_angle", [](const cga::circle_t &c) { return Op::AA(c); });
 }
 
-}  // namespace cga
+} // namespace cga
 
-}  // namespace pyversor
+} // namespace pyversor

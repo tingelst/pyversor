@@ -18,6 +18,7 @@ pybind11_add_module(__pyversor__
   src/pyversor.cpp
   src/pyversor_ega.cpp
   src/pyversor_cga.cpp
+  src/round.cpp
   src/vsr_cga3D_op.cpp
   src/vsr_cga3D_round.cpp
 )
