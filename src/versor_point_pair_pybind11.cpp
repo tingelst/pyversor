@@ -7,6 +7,7 @@ namespace python {
 namespace py = pybind11;
 using namespace vsr::cga;
 
+
 void AddPointPair(py::module &m) {
   py::class_<Par>(m, "Par", py::buffer_protocol())
       .def(py::init<double, double, double, double, double, double, double,
@@ -46,6 +47,7 @@ void AddPointPair(py::module &m) {
       .def("comm", [](const Par &lhs,
                       const Par &rhs) { return (lhs * rhs - rhs * lhs) * 0.5; })
       .def("pnt", [](const Par &self) { return Round::location(self); })
+        .def("print", &Par::print)
       .def("radius", [](const Par &self) { return Round::radius(self); })
       .def("pln", [](const Par &self) { return Round::carrier(self); })
       .def("surround", [](const Par &self) { return Round::surround(self); })
