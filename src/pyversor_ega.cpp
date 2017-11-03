@@ -6,27 +6,13 @@ namespace ega {
 
 void add_submodule(py::module &m) {
   auto ega = m.def_submodule("ega");
-  add_vector(ega);
-  add_bivector(ega);
-  add_trivector(ega);
-  add_rotator(ega);
-  add_multivector(ega);
-  add_generate(ega);
+  // add_vector(ega);
+  // add_bivector(ega);
+  // add_trivector(ega);
+  // add_rotator(ega);
+  // add_multivector(ega);
+  // add_generate(ega);
 }
-
-template <typename T>
-struct outer_product {
-  template <typename A, typename module_t>
-  static void add(module_t &m) {
-    m.def("outer2", [](const T &lhs, const A &rhs) { return lhs ^ rhs; });
-  }
-
-  template <typename A, typename B, typename... Cs, typename module_t>
-  static void add(module_t &m) {
-    add<A>(m);
-    add<B, Cs...>(m);
-  }
-};
 
 void add_vector(py::module &m) {
   auto t = add_euclidean_multivector<vector_t>(m, "Vector");
@@ -75,6 +61,6 @@ void add_generate(py::module &m) {
   generate.def("exp", [](const bivector_t &b) { return Gen::rot(b); });
 }
 
-}  // namespace ega
+} // namespace ega
 
-}  // namespace pyversor
+} // namespace pyversor

@@ -105,6 +105,10 @@ struct sphere_t : quadvector_t {
 
 using pseudoscalar_t = vsr::cga::Pss;
 using motor_t = vsr::cga::Mot;
+using translator_t = vsr::cga::Trs;
+using conformal_rotor_t = vsr::cga::Con;
+using boost_t = vsr::cga::Bst;
+
 using dual_line_t = vsr::cga::Dll;
 using line_t = vsr::cga::Lin;
 using dual_plane_t = vsr::cga::Dlp;
@@ -113,6 +117,11 @@ using plane_t = vsr::cga::Pln;
 using direction_vector_t = vsr::cga::Drv;
 using direction_bivector_t = vsr::cga::Drb;
 using direction_trivector_t = vsr::cga::Drt;
+
+using tangent_vector_t = vsr::cga::TangentVector;
+using tangent_bivector_t = vsr::cga::TangentBivector;
+using tangent_trivector_t = vsr::cga::TangentTrivector;
+
 using origin_t = vsr::cga::Ori;
 using infinity_t = vsr::cga::Inf;
 using multivector_t =
@@ -134,168 +143,93 @@ template <typename T> struct outer_product {
   }
 };
 
-template <typename T>
-py::class_<T> add_multivector(py::module &m, const std::string &name) {
-  auto t = py::class_<T>(m, name.c_str(), py::buffer_protocol());
-  // negate
-  t.def("__neg__", [](const T &arg) { return -arg; });
-  // reverse
-  t.def("__invert__", [](const T &arg) { return ~arg; });
-  t.def("reverse", [](const T &arg) { return ~arg; });
-  // inverse
-  t.def("inverse", [](const T &arg) { return !arg; });
-  // involution
-  t.def("involute", &T::conjugation);
-  // conjugation
-  t.def("conjugate", &T::conjugation);
-  // geometric product
-  //   t.def("geometric", [](const T &lhs, const T &rhs) { return lhs * rhs; });
-  //   t.def("__mul__", [](const T &lhs, const T &rhs) { return lhs * rhs; });
-  //   t.def("__mul__", [](const T &lhs, double rhs) { return lhs * rhs; });
-  //   t.def("__rmul__", [](const T &lhs, double rhs) { return lhs * rhs; });
-  //   t.def("__imul__", [](T &lhs, double rhs) { return lhs *= rhs; });
-  // division
-  //   t.def("__div__", [](const T &lhs, const T &rhs) { return lhs / rhs; });
-  //   t.def("__div__", [](const T &lhs, double rhs) { return lhs / rhs; });
-  //   t.def("__idiv__", [](T &lhs, const T &rhs) { return lhs /= rhs; });
-  //   t.def("__idiv__", [](T &lhs, double rhs) { return lhs /= rhs; });
-  // addition
-  //   t.def("__add__", [](const T &lhs, const T &rhs) { return lhs + rhs; });
-  //   t.def("__iadd__", [](T &lhs, const T &rhs) { return lhs += rhs; });
-  // subtraction
-  //   t.def("__sub__", [](const T &lhs, const T &rhs) { return lhs - rhs; });
-  //   t.def("__sub__", [](const T &lhs, double rhs) { return lhs + (rhs *
-  //   -1.0); }); t.def("__isub__", [](T &lhs, const T &rhs) { return lhs -=
-  //   rhs; }); t.def("__rsub__",
-  //         [](const T &lhs, double rhs) { return lhs + (rhs * -1.0); });
-  // outer product
-  //   t.def("outer", [](const T &lhs, const T &rhs) { return lhs ^ rhs; });
-  //   t.def("outer", [](const T &lhs, double rhs) { return lhs * rhs; });
-  //   t.def("__xor__", [](const T &lhs, const T &rhs) { return lhs ^ rhs; });
-  //   t.def("__xor__", [](const T &lhs, double rhs) { return lhs * rhs; });
-  //   t.def("__rxor__", [](const T &lhs, double rhs) { return lhs * rhs; });
-  // inner product
-  //   t.def("inner", [](const T &lhs, const T &rhs) { return (lhs <= rhs)[0];
-  //   }); t.def("__le__", [](const T &lhs, const T &rhs) { return (lhs <=
-  //   rhs)[0]; });
-  // commutator products
-  //   t.def("commutator", [](const T &lhs, const T &rhs) { return lhs % rhs;
-  //   }); t.def("anti_commutator", [](const T &lhs, const T &rhs) {
-  //     return (lhs * rhs + rhs * lhs) * 0.5;
-  //   });
-  // sandwich product
-  //   t.def("spin",
-  //         [](const T &lhs, const ega::rotator_t &rhs) { return lhs.spin(rhs);
-  //         });
-  //   t.def("spin",
-  //         [](const T &lhs, const cga::motor_t &rhs) { return lhs.spin(rhs);
-  //         });
-  // reflect
-  //   t.def("reflect", [](const T &lhs, const T &rhs) { return
-  //   lhs.reflect(rhs); });
-  // weights, units and norms
-  //   t.def("weight", &T::wt);
-  //   t.def("rweight", &T::rwt);
-  //   t.def("norm", &T::norm);
-  //   t.def("rnorm", &T::rnorm);
-  //   t.def("unit", &T::unit);
-  //   t.def("runit", &T::runit);
-  //   t.def("tunit", &T::tunit);
-  // Get scalar coefficient
-  t.def("__getitem__", [](T &arg, int idx) { return arg[idx]; });
-  // Set scalar coefficient
-  t.def("__setitem__", [](T &arg, int idx, double val) { arg[idx] = val; });
-  // Representation string
-  t.def("__repr__", [name](const T &arg) {
-    std::stringstream ss;
-    ss.precision(4);
-    ss << name << "(";
-    for (int i = 0; i < arg.Num - 1; ++i) {
-      ss << arg[i] << ", ";
-    }
-    ss << arg[arg.Num - 1] << ")";
-    return ss.str();
-  });
-  t.def("toarray", [](const T &arg) {
-    auto array = py::array_t<double>(T::Num);
-    auto buffer = array.request();
-    auto ptr = reinterpret_cast<double *>(buffer.ptr);
-    for (size_t i = 0; i < T::Num; ++i) {
-      ptr[i] = arg[i];
-    }
-    return array;
+// geometric product
+//   t.def("geometric", [](const T &lhs, const T &rhs) { return lhs * rhs; });
+//   t.def("__mul__", [](const T &lhs, const T &rhs) { return lhs * rhs; });
+//   t.def("__mul__", [](const T &lhs, double rhs) { return lhs * rhs; });
+//   t.def("__rmul__", [](const T &lhs, double rhs) { return lhs * rhs; });
+//   t.def("__imul__", [](T &lhs, double rhs) { return lhs *= rhs; });
+// division
+//   t.def("__div__", [](const T &lhs, const T &rhs) { return lhs / rhs; });
+//   t.def("__div__", [](const T &lhs, double rhs) { return lhs / rhs; });
+//   t.def("__idiv__", [](T &lhs, const T &rhs) { return lhs /= rhs; });
+//   t.def("__idiv__", [](T &lhs, double rhs) { return lhs /= rhs; });
+// addition
+//   t.def("__add__", [](const T &lhs, const T &rhs) { return lhs + rhs; });
+//   t.def("__iadd__", [](T &lhs, const T &rhs) { return lhs += rhs; });
+// subtraction
+//   t.def("__sub__", [](const T &lhs, const T &rhs) { return lhs - rhs; });
+//   t.def("__sub__", [](const T &lhs, double rhs) { return lhs + (rhs *
+//   -1.0); }); t.def("__isub__", [](T &lhs, const T &rhs) { return lhs -=
+//   rhs; }); t.def("__rsub__",
+//         [](const T &lhs, double rhs) { return lhs + (rhs * -1.0); });
+// outer product
+//   t.def("outer", [](const T &lhs, const T &rhs) { return lhs ^ rhs; });
+//   t.def("outer", [](const T &lhs, double rhs) { return lhs * rhs; });
+//   t.def("__xor__", [](const T &lhs, const T &rhs) { return lhs ^ rhs; });
+//   t.def("__xor__", [](const T &lhs, double rhs) { return lhs * rhs; });
+//   t.def("__rxor__", [](const T &lhs, double rhs) { return lhs * rhs; });
+// inner product
+//   t.def("inner", [](const T &lhs, const T &rhs) { return (lhs <= rhs)[0];
+//   }); t.def("__le__", [](const T &lhs, const T &rhs) { return (lhs <=
+//   rhs)[0]; });
+// commutator products
+//   t.def("commutator", [](const T &lhs, const T &rhs) { return lhs % rhs;
+//   }); t.def("anti_commutator", [](const T &lhs, const T &rhs) {
+//     return (lhs * rhs + rhs * lhs) * 0.5;
+//   });
+// sandwich product
+//   t.def("spin",
+//         [](const T &lhs, const ega::rotator_t &rhs) { return lhs.spin(rhs);
+//         });
+//   t.def("spin",
+//         [](const T &lhs, const cga::motor_t &rhs) { return lhs.spin(rhs);
+//         });
+// reflect
+//   t.def("reflect", [](const T &lhs, const T &rhs) { return
+//   lhs.reflect(rhs); });
 
-  });
-  //   t.def(py::pickle(
-  //       [](const T &p) { // __getstate__
-  //         std::vector<double> coeffs;
-  //         for (size_t i = 0; i < T::Num; ++i) {
-  //           coeffs.push_back(p[i]);
-  //         }
-  //         return coeffs;
-  //       },
-  //       [](const std::vector<double> &coeffs) { // __setstate__
-  //         if (coeffs.size() != T::Num) {
-  //           throw std::runtime_error("Invalid state!");
-  //         }
-  //         // Create a new C++ instance
-  //         T p;
-  //         for (size_t i = 0; i < T::Num; ++i) {
-  //           p[i] = coeffs[i];
-  //         }
-  //         return p;
-  //       }));
-  return t;
-}
+//   t.def(py::pickle(
+//       [](const T &p) { // __getstate__
+//         std::vector<double> coeffs;
+//         for (size_t i = 0; i < T::Num; ++i) {
+//           coeffs.push_back(p[i]);
+//         }
+//         return coeffs;
+//       },
+//       [](const std::vector<double> &coeffs) { // __setstate__
+//         if (coeffs.size() != T::Num) {
+//           throw std::runtime_error("Invalid state!");
+//         }
+//         // Create a new C++ instance
+//         T p;
+//         for (size_t i = 0; i < T::Num; ++i) {
+//           p[i] = coeffs[i];
+//         }
+//         return p;
+//       }));
 
-template <typename T>
-py::class_<T> add_euclidean_multivector(py::module &m,
-                                        const std::string &name) {
-  auto t = add_multivector<T>(m, name);
-  t.def("grade", [](const T &arg, int grade) {
-    switch (grade) {
-    case 0:
-      return T(ega::scalar_t(arg));
-    case 1:
-      return T(ega::vector_t(arg));
-    case 2:
-      return T(ega::bivector_t(arg));
-    case 3:
-      return T(ega::trivector_t(arg));
-    default:
-      throw std::invalid_argument("Can only project onto grades 0 to 3.");
-    };
-  });
-  t.def("dual", &T::duale);
-  t.def("undual", &T::unduale);
-  return t;
-}
-
-template <typename T>
-py::class_<T> add_conformal_multivector(py::module &m,
-                                        const std::string &name) {
-  auto t = add_multivector<T>(m, name);
-  //   t.def("grade", [](const T &arg, int grade) {
-  //     switch (grade) {
-  //     case 0:
-  //       return T(cga::scalar_t(arg));
-  //     case 1:
-  //       return T(cga::vector_t(arg));
-  //     case 2:
-  //       return T(cga::bivector_t(arg));
-  //     case 3:
-  //       return T(cga::trivector_t(arg));
-  //     case 4:
-  //       return T(cga::quadvector_t(arg));
-  //     case 5:
-  //       return T(cga::pseudoscalar_t(arg));
-  //     default:
-  //       throw std::invalid_argument("Can only project onto grades 0 to 5.");
-  //     };
-  //   });
-  t.def("dual", &T::dual);
-  t.def("undual", &T::undual);
-  return t;
-}
+// template <typename T>
+// py::class_<T> add_euclidean_multivector(py::module &m,
+//                                         const std::string &name) {
+//   auto t = add_multivector<T>(m, name);
+//   t.def("grade", [](const T &arg, int grade) {
+//     switch (grade) {
+//     case 0:
+//       return T(ega::scalar_t(arg));
+//     case 1:
+//       return T(ega::vector_t(arg));
+//     case 2:
+//       return T(ega::bivector_t(arg));
+//     case 3:
+//       return T(ega::trivector_t(arg));
+//     default:
+//       throw std::invalid_argument("Can only project onto grades 0 to 3.");
+//     };
+//   });
+//   t.def("dual", &T::duale);
+//   t.def("undual", &T::unduale);
+//   return t;
+// }
 
 } // namespace pyversor

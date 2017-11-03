@@ -29,76 +29,49 @@
 
 #pragma once
 
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
-#include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
 
-#include <versor/space/cga3D_op.h>
-#include <versor/space/cga3D_round.h>
-
-#include <pyversor/directions.h>
-#include <pyversor/flats.h>
 #include <pyversor/multivectors.h>
-#include <pyversor/products.h>
-#include <pyversor/rounds.h>
-#include <pyversor/tangents.h>
-#include <pyversor/types.h>
-#include <pyversor/versors.h>
 
 namespace pyversor {
 
 namespace py = pybind11;
 
-namespace ega {
-
-void add_submodule(py::module &m);
-void add_vector(py::module &m);
-void add_bivector(py::module &m);
-void add_trivector(py::module &m);
-void add_rotator(py::module &m);
-void add_multivector(py::module &m);
-void add_generate(py::module &m);
-
-} // namespace ega
-
 namespace cga {
 
-void add_submodule(py::module &m);
-// General multivectors
-void add_vector(py::module &m);
-void add_bivector(py::module &m);
-void add_trivector(py::module &m);
-void add_quadvector(py::module &m);
-void add_pseudoscalar(py::module &m);
-void add_origin(py::module &m);
-void add_infinity(py::module &m);
-void add_multivector(py::module &m);
-// Blades
-// Rounds
-void add_round(py::module &m);
+struct flats {
+  template <typename flat_t, bool dual, typename module_t = py::module>
+  static void add_location(module_t &m) {
+    using vsr::cga::Flat;
+    using vsr::cga::Round;
+    m.def("location", [](const flat_t &a) {
+      return Flat::location(a, Round::null(ega::vector_t{0.0, 0.0, 0.0}), dual);
+    });
+    m.def("location", [](const flat_t &a, const point_t &b) {
+      return Flat::location(a, Round::null(b), dual);
+    });
+  }
 
-// Flats
-void add_dual_line(py::module &m);
-void add_line(py::module &m);
-void add_dual_plane(py::module &m);
-void add_plane(py::module &m);
-void add_flat_point(py::module &m);
-// Directions
-void add_direction_vector(py::module &m);
-void add_direction_bivector(py::module &m);
-void add_direction_trivector(py::module &m);
-void add_direction_quadvector(py::module &m);
-// Tangents
+  template <typename flat_t, typename module_t = py::module>
+  static void add_direction(module_t &m) {
+    using vsr::cga::Flat;
+    m.def("direction", [](const flat_t &a) { return Flat::direction(a); });
+  }
+};
 
-// Versors
-void add_motor(py::module &m);
+// void add_line(py::module &m) {
+//   auto t = add_conformal_multivector<line_t>(m, "Line");
+//   t.def(py::init<double, double, double, double, double, double>());
+//   flat::add_location<line_t, false>(t);
+//   flat::add_direction<line_t>(t);
+// }
 
-void add_flat(py::module &m);
-void add_construct(py::module &m);
-void add_generate(py::module &m);
-void add_operate(py::module &m);
+void def_flats(py::module &m);
+void def_flat_point(py::module &m);
+void def_dual_line(py::module &m);
+void def_line(py::module &m);
+void def_plane(py::module &m);
+void def_dual_plane(py::module &m);
 
 } // namespace cga
 

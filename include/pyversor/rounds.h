@@ -44,7 +44,7 @@ namespace cga {
 
 struct round {
   template <typename round_t, typename module_t = py::module>
-  static void add_distance(module_t &m) {
+  static void def_distance(module_t &m) {
     using vsr::cga::Round;
     m.def("distance", [](const round_t &a, const round_t &b) {
       return Round::distance(a, b);
@@ -52,7 +52,7 @@ struct round {
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_squared_distance(module_t &m) {
+  static void def_squared_distance(module_t &m) {
     using vsr::cga::Round;
     m.def("squared_distance", [](const round_t &a, const round_t &b) {
       return Round::squaredDistance(a, b);
@@ -60,25 +60,25 @@ struct round {
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_location(module_t &m) {
+  static void def_location(module_t &m) {
     using vsr::cga::Round;
     m.def("location", [](const round_t &a) { return Round::location(a); });
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_center(module_t &m) {
+  static void def_center(module_t &m) {
     using vsr::cga::Round;
     m.def("center", [](const round_t &a) { return Round::center(a); });
   }
 
   template <typename round_t, bool dual, typename module_t = py::module>
-  static void add_size(module_t &m) {
+  static void def_size(module_t &m) {
     using vsr::cga::Round;
     m.def("size", [](const round_t &a) { return Round::size(a, dual); });
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_radius(module_t &m) {
+  static void def_radius(module_t &m) {
     using vsr::cga::Round;
     m.def("radius", [](const round_t &a) { return Round::radius(a); });
     // Inverse of radius
@@ -86,44 +86,44 @@ struct round {
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_null(module_t &m) {
+  static void def_null(module_t &m) {
     using vsr::cga::Round;
     m.def("null", [](const round_t &a) { return Round::null(a); });
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_carrier(module_t &m) {
+  static void def_carrier(module_t &m) {
     using vsr::cga::Round;
     m.def("carrier", [](const round_t &a) { return Round::carrier(a); });
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_normalize(module_t &m) {
+  static void def_normalize(module_t &m) {
     using vsr::cga::Round;
     m.def("normalize", [](const round_t &a) { return Round::normalize(a); });
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_renormalize(module_t &m) {
+  static void def_renormalize(module_t &m) {
     using vsr::cga::Round;
     m.def("renormalize",
           [](const round_t &a) { return Round::renormalize(a); });
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_surround(module_t &m) {
+  static void def_surround(module_t &m) {
     using vsr::cga::Round;
     m.def("surround", [](const round_t &a) { return Round::surround(a); });
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_direction(module_t &m) {
+  static void def_direction(module_t &m) {
     using vsr::cga::Round;
     m.def("direction", [](const round_t &a) { return Round::direction(a); });
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_split(module_t &m) {
+  static void def_split(module_t &m) {
     using vsr::cga::Round;
     m.def("split", [](const round_t &a) { return Round::split(a); });
     m.def("split_location",
@@ -131,7 +131,7 @@ struct round {
   }
 
   template <typename round_t = dual_sphere_t, typename module_t = py::module>
-  static void add_produce(module_t &m) {
+  static void def_produce(module_t &m) {
     using vsr::cga::Round;
     m.def("produce", [](const round_t &a, const ega::vector_t &b) {
       return Round::produce(a, b);
@@ -142,12 +142,14 @@ struct round {
   }
 
   template <typename round_t, typename module_t = py::module>
-  static void add_radius_center_location(module_t &m) {
-    add_radius<round_t>(m);
-    add_center<round_t>(m);
-    add_location<round_t>(m);
+  static void def_radius_center_location(module_t &m) {
+    def_radius<round_t>(m);
+    def_center<round_t>(m);
+    def_location<round_t>(m);
   }
 };
+
+void def_rounds(py::module &m);
 
 } // namespace cga
 
