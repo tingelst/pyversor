@@ -1,20 +1,20 @@
 // Copyright (c) 2015, Lars Tingelstad
 // All rights reserved.
-
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
-
+//
 // * Redistributions of source code must retain the above copyright notice, this
 //   list of conditions and the following disclaimer.
-
+//
 // * Redistributions in binary form must reproduce the above copyright notice,
 //   this list of conditions and the following disclaimer in the documentation
 //   and/or other materials provided with the distribution.
-
+//
 // * Neither the name of pyversor nor the names of its
 //   contributors may be used to endorse or promote products derived from
 //   this software without specific prior written permission.
-
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,7 +40,8 @@
 
 namespace pyversor {
 
-template <typename T> static constexpr auto estrings() {
+template <typename T>
+static constexpr auto estrings() {
   auto arr = T::basis::array;
   auto earr = std::array<std::string, arr.size()>{};
   auto size = arr.size();
@@ -85,38 +86,42 @@ py::class_<T> def_multivector(py::module &m, const std::string &name) {
   t.def("unit", &T::unit);
   t.def("runit", &T::runit);
   t.def("tunit", &T::tunit);
+  // Grade projection operator
   t.def("grade", [](const T &arg, int grade) {
     switch (grade) {
-    case 0:
-      return T(cga::scalar_t(arg));
-    case 1:
-      return T(cga::vector_t(arg));
-    case 2:
-      return T(cga::bivector_t(arg));
-    case 3:
-      return T(cga::trivector_t(arg));
-    case 4:
-      return T(cga::quadvector_t(arg));
-    case 5:
-      return T(cga::pseudoscalar_t(arg));
-    default:
-      throw std::invalid_argument("Can only project onto grades 0 to 5.");
+      case 0:
+        return T(cga::scalar_t(arg));
+      case 1:
+        return T(cga::vector_t(arg));
+      case 2:
+        return T(cga::bivector_t(arg));
+      case 3:
+        return T(cga::trivector_t(arg));
+      case 4:
+        return T(cga::quadvector_t(arg));
+      case 5:
+        return T(cga::pseudoscalar_t(arg));
+      default:
+        throw std::invalid_argument("Can only project onto grades 0 to 5.");
     };
   });
   // Get scalar coefficient
   t.def("__getitem__", [](T &arg, int idx) { return arg[idx]; });
   // Set scalar coefficient
   t.def("__setitem__", [](T &arg, int idx, double val) { arg[idx] = val; });
+  // List of basis blades
+  t.def_property_readonly_static("_basis_blades",
+                                 [](py::object) { return estrings<T>(); });
   // Representation string
   t.def("__repr__", [name](const T &arg) {
     auto es = estrings<T>();
     std::stringstream ss;
     ss.precision(4);
-    ss << name << "";
+    ss << name << " [ ";
     for (int i = 0; i < arg.Num - 1; ++i) {
-      ss << arg[i] << " " << es[i] << " + ";
+      ss << arg[i] << " ";
     }
-    ss << arg[arg.Num - 1] << " " << es[arg.Num - 1] << "";
+    ss << arg[arg.Num - 1] << "]";
     return ss.str();
   });
   t.def("toarray", [](const T &arg) {
@@ -127,6 +132,11 @@ py::class_<T> def_multivector(py::module &m, const std::string &name) {
       ptr[i] = arg[i];
     }
     return array;
+  });
+  t.def_buffer([](T &arg) {
+    return py::buffer_info(
+        &arg.val[0], sizeof(double), py::format_descriptor<double>::format(), 1,
+        {static_cast<unsigned long>(arg.Num)}, {sizeof(double)});
   });
   return t;
 }
@@ -140,6 +150,6 @@ void def_pseudoscalar(py::module &m);
 void def_infinity(py::module &m);
 void def_origin(py::module &m);
 void def_full_multivector(py::module &m);
-} // namespace cga
+}  // namespace cga
 
-} // namespace pyversor
+}  // namespace pyversor

@@ -29,41 +29,53 @@
 
 #pragma once
 
+#include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <type_traits>
 
 namespace pyversor {
 
+namespace py = pybind11;
+
 template <typename A, typename B, typename module_t>
 auto def_outer_product(module_t &m) {
-  m.def("__xor__", [](const A &lhs, const B &rhs) { return lhs ^ rhs; });
-  m.def("outer", [](const A &lhs, const B &rhs) { return lhs ^ rhs; });
+  m.def("__xor__", [](const A &lhs, const B &rhs) { return lhs ^ rhs; },
+        py::is_operator());
+  m.def("outer", [](const A &lhs, const B &rhs) { return lhs ^ rhs; },
+        py::is_operator());
 }
 
 template <typename A, typename B, typename module_t>
 auto def_inner_product(module_t &m) {
-  m.def("__le__", [](const A &lhs, const B &rhs) { return lhs <= rhs; });
-  m.def("inner", [](const A &lhs, const B &rhs) { return lhs <= rhs; });
+  m.def("__le__", [](const A &lhs, const B &rhs) { return lhs <= rhs; },
+        py::is_operator());
+  m.def("inner", [](const A &lhs, const B &rhs) { return lhs <= rhs; },
+        py::is_operator());
 }
 
 template <typename A, typename B, typename module_t>
 auto def_geometric_product(module_t &m) {
   if (std::is_same<B, double>()) {
-    m.def("__mul__", [](const A &lhs, double rhs) { return lhs * rhs; });
-    m.def("__rmul__", [](const A &lhs, double rhs) { return lhs * rhs; });
-    m.def("__imul__", [](A &lhs, double rhs) { return lhs *= rhs; });
+    m.def("__mul__", [](const A &lhs, double rhs) { return lhs * rhs; },
+          py::is_operator());
+    m.def("__rmul__", [](const A &lhs, double rhs) { return lhs * rhs; },
+          py::is_operator());
+    m.def("__imul__", [](A &lhs, double rhs) { return lhs *= rhs; },
+          py::is_operator());
   } else {
-    m.def("geometric", [](const A &lhs, const B &rhs) { return lhs * rhs; });
-    m.def("__mul__", [](const A &lhs, const B &rhs) { return lhs * rhs; });
+    m.def("geometric", [](const A &lhs, const B &rhs) { return lhs * rhs; },
+          py::is_operator());
+    m.def("__mul__", [](const A &lhs, const B &rhs) { return lhs * rhs; },
+          py::is_operator());
   }
 }
 
 template <typename A, typename B, typename C, typename module_t>
 auto def_geometric_product(module_t &m) {
-  m.def("geometric", [](const A &lhs, const B &rhs) { return C(lhs * rhs); });
-  m.def("__mul__", [](const A &lhs, const B &rhs) { return C(lhs * rhs); });
+  m.def("geometric", [](const A &lhs, const B &rhs) { return C(lhs * rhs); },
+        py::is_operator());
+  m.def("__mul__", [](const A &lhs, const B &rhs) { return C(lhs * rhs); },
+        py::is_operator());
 }
 
-//   t.def("geometric", [](const T &lhs, const T &rhs) { return lhs * rhs; });
-//   t.def("__mul__", [](const T &lhs, const T &rhs) { return lhs * rhs; });
-} // namespace pyversor
+}  // namespace pyversor
