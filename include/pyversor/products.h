@@ -38,6 +38,22 @@ namespace pyversor {
 namespace py = pybind11;
 
 template <typename A, typename B, typename module_t>
+auto def_addition(module_t &m) {
+  m.def("__add__", [](const A &lhs, const B &rhs) { return lhs + rhs; },
+        py::is_operator());
+  m.def("__iadd__", [](A &lhs, const B &rhs) { return lhs += rhs; },
+        py::is_operator());
+}
+
+template <typename A, typename B, typename C, typename module_t>
+auto def_addition(module_t &m) {
+  m.def("__add__", [](const A &lhs, const B &rhs) { return C(lhs + rhs); },
+        py::is_operator());
+  m.def("__iadd__", [](A &lhs, const B &rhs) { return C(lhs += rhs); },
+        py::is_operator());
+}
+
+template <typename A, typename B, typename module_t>
 auto def_outer_product(module_t &m) {
   m.def("__xor__", [](const A &lhs, const B &rhs) { return lhs ^ rhs; },
         py::is_operator());
@@ -76,6 +92,16 @@ auto def_geometric_product(module_t &m) {
         py::is_operator());
   m.def("__mul__", [](const A &lhs, const B &rhs) { return C(lhs * rhs); },
         py::is_operator());
+}
+
+template <typename A, typename B, typename module_t>
+auto def_sandwich_product(module_t &m) {
+  m.def("spin", [](const A &lhs, const B &rhs) { return lhs.spin(rhs); });
+}
+
+template <typename A, typename B, typename C, typename module_t>
+auto def_sandwich_product(module_t &m) {
+  m.def("spin", [](const A &lhs, const B &rhs) { return C(lhs).spin(rhs); });
 }
 
 }  // namespace pyversor

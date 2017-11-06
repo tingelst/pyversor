@@ -9,8 +9,8 @@ void def_rounds(py::module &m) {
   auto t = m.def_submodule("rounds");
   round::def_null<ega::vector_t>(t);
   round::def_null<cga::vector_t>(t);
-  round::def_distance<vector_t>(m);
-  round::def_squared_distance<vector_t>(m);
+  round::def_distance<vector_t>(t);
+  round::def_squared_distance<vector_t>(t);
   round::def_radius_center_location<dual_sphere_t>(t);
   round::def_radius_center_location<sphere_t>(t);
   round::def_radius_center_location<point_pair_t>(t);

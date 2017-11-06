@@ -24,6 +24,7 @@ pybind11_add_module(__pyversor__
   src/tangents.cpp
   src/directions.cpp
   src/versors.cpp
+  src/generate.cpp
   src/vsr_cga3D_op.cpp
   src/vsr_cga3D_round.cpp
 )

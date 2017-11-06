@@ -29,9 +29,13 @@ void def_translator(py::module &m) {
 
 void def_motor(py::module &m) {
   auto mot = def_multivector<cga::motor_t>(m, "Motor");
+  mot.def(py::init<double, double, double, double, double, double, double, double>());
+  mot.def(py::init<cga::dual_line_t>());
   def_geometric_product<cga::motor_t, cga::motor_t>(mot);
   def_geometric_product<cga::motor_t, cga::translator_t>(mot);
   def_geometric_product<cga::motor_t, ega::rotator_t>(mot);
+  def_geometric_product<cga::motor_t, cga::dual_line_t>(mot);
+  def_addition<cga::motor_t, cga::dual_line_t>(mot);
 }
 
 void def_conformal_rotor(py::module &m) {

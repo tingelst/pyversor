@@ -9,7 +9,7 @@ from __pyversor__.cga import (
     Multivector
 )
 
-# from . import generate
+from . import generate
 # from . import operate
 # from . import construct
 from . import flats

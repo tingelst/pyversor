@@ -61,47 +61,52 @@ namespace cga {
 
 using scalar_t = cga_t::make_grade<0>;
 using vector_t = cga_t::make_grade<1>;
+using point_t = vector_t;
+using dual_sphere_t = vector_t;
 
-struct point_t : vector_t {
-  point_t(const vector_t &v) : vector_t(v.null()) {}
-  point_t(const ega::vector_t &v) : vector_t(v.null()) {}
-  point_t(double x, double y, double z)
-      : vector_t(ega::vector_t(x, y, z).null()) {}
-};
+// struct point_t : vector_t {
+//   point_t(const vector_t &v) : vector_t(v.null()) {}
+//   point_t(const ega::vector_t &v) : vector_t(v.null()) {}
+//   point_t(double x, double y, double z)
+//       : vector_t(ega::vector_t(x, y, z).null()) {}
+// };
 
-struct dual_sphere_t : vector_t {
-  dual_sphere_t(const vector_t &v) : vector_t(v) {}
-  dual_sphere_t(const point_t &p, double r)
-      : vector_t(vsr::cga::Construct::sphere(p, r).dual()) {}
-  dual_sphere_t(double x, double y, double z, double r)
-      : dual_sphere_t(point_t(x, y, z), r) {}
-};
+// struct dual_sphere_t : vector_t {
+//   dual_sphere_t(const vector_t &v) : vector_t(v) {}
+//   dual_sphere_t(const point_t &p, double r)
+//       : vector_t(vsr::cga::Construct::sphere(p, r).dual()) {}
+//   dual_sphere_t(double x, double y, double z, double r)
+//       : dual_sphere_t(point_t(x, y, z), r) {}
+// };
 
 using bivector_t = cga_t::make_grade<2>;
-struct point_pair_t : bivector_t {
-  point_pair_t(const bivector_t &b) : bivector_t(b) {}
-  point_pair_t(const point_t &a, const point_t &b) : bivector_t(a ^ b) {}
-};
+using point_pair_t = bivector_t;
+// struct point_pair_t : bivector_t {
+//   point_pair_t(const bivector_t &b) : bivector_t(b) {}
+//   point_pair_t(const point_t &a, const point_t &b) : bivector_t(a ^ b) {}
+// };
 
 using trivector_t = cga_t::make_grade<3>;
-struct circle_t : trivector_t {
-  circle_t(const trivector_t &t) : trivector_t(t) {}
-  circle_t(const point_t &a, const point_t &b, const point_t &c)
-      : trivector_t(a ^ b ^ c) {}
-};
+using circle_t = trivector_t;
+// struct circle_t : trivector_t {
+//   circle_t(const trivector_t &t) : trivector_t(t) {}
+//   circle_t(const point_t &a, const point_t &b, const point_t &c)
+//       : trivector_t(a ^ b ^ c) {}
+// };
 
 using quadvector_t = cga_t::make_grade<4>;
+using sphere_t = quadvector_t;
 
-struct sphere_t : quadvector_t {
-  sphere_t(const quadvector_t &v) : quadvector_t(v) {}
-  sphere_t(const point_t &p, double r)
-      : sphere_t(vsr::cga::Construct::sphere(p, r)) {}
-  sphere_t(double x, double y, double z, double r)
-      : sphere_t(point_t(x, y, z), r) {}
-  sphere_t(const point_t &a, const point_t &b, const point_t &c,
-           const point_t &d)
-      : sphere_t(a ^ b ^ c ^ d) {}
-};
+// struct sphere_t : quadvector_t {
+//   sphere_t(const quadvector_t &v) : quadvector_t(v) {}
+//   sphere_t(const point_t &p, double r)
+//       : sphere_t(vsr::cga::Construct::sphere(p, r)) {}
+//   sphere_t(double x, double y, double z, double r)
+//       : sphere_t(point_t(x, y, z), r) {}
+//   sphere_t(const point_t &a, const point_t &b, const point_t &c,
+//            const point_t &d)
+//       : sphere_t(a ^ b ^ c ^ d) {}
+// };
 
 using pseudoscalar_t = vsr::cga::Pss;
 using motor_t = vsr::cga::Mot;

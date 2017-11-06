@@ -15,6 +15,9 @@ void def_bivector(py::module &m) {
   auto biv = def_multivector<cga::bivector_t>(m, "Bivector");
   biv.def(py::init<double, double, double, double, double, double, double,
                    double, double, double>());
+  biv.def(py::init<cga::dual_line_t>());
+  biv.def(py::init<cga::direction_vector_t>());
+  biv.def(py::init<cga::tangent_vector_t>());
   def_geometric_product<cga::bivector_t, cga::bivector_t>(biv);
 }
 

@@ -53,12 +53,15 @@ static constexpr auto estrings() {
 
 template <typename T>
 py::class_<T> def_multivector(py::module &m, const std::string &name) {
-  auto t = py::class_<T>(m, name.c_str(), py::buffer_protocol());
+  auto t =
+      py::class_<T>(m, name.c_str(), py::buffer_protocol(), py::dynamic_attr());
   // Constructor from other T
   t.def(py::init<>());
   t.def(py::init<T>());
   // Multiply by double
   def_geometric_product<T, double>(t);
+  // Addition of same type
+  def_addition<T, T>(t);
   // Negate
   t.def("__neg__", [](const T &arg) { return -arg; });
   // Reverse
@@ -71,9 +74,9 @@ py::class_<T> def_multivector(py::module &m, const std::string &name) {
   // Conjugation
   t.def("conjugate", &T::conjugation);
   // Conformal dual
-  t.def("dual", &T::duale);
+  t.def("dual", &T::dual);
   // Conformal undual
-  t.def("undual", &T::unduale);
+  t.def("undual", &T::undual);
   // Euclidean dual
   t.def("duale", &T::duale);
   // Euclidean undual
@@ -138,6 +141,25 @@ py::class_<T> def_multivector(py::module &m, const std::string &name) {
         &arg.val[0], sizeof(double), py::format_descriptor<double>::format(), 1,
         {static_cast<unsigned long>(arg.Num)}, {sizeof(double)});
   });
+  t.def(py::pickle(
+      [](const T &p) {  // __getstate__
+        std::vector<double> coeffs;
+        for (size_t i = 0; i < T::Num; ++i) {
+          coeffs.push_back(p[i]);
+        }
+        return coeffs;
+      },
+      [](const std::vector<double> &coeffs) {  // __setstate__
+        if (coeffs.size() != T::Num) {
+          throw std::runtime_error("Invalid state!");
+        }
+        // Create a new C++ instance
+        T p;
+        for (size_t i = 0; i < T::Num; ++i) {
+          p[i] = coeffs[i];
+        }
+        return p;
+      }));
   return t;
 }
 

@@ -54,6 +54,8 @@ void def_dual_line(py::module &m) {
   auto dll = def_multivector<cga::dual_line_t>(m, "DualLine");
   dll.def(py::init<double, double, double, double, double, double>());
   def_geometric_product<cga::dual_line_t, cga::dual_line_t>(dll);
+  def_geometric_product<cga::dual_line_t, cga::motor_t>(dll);
+  def_addition<cga::dual_line_t, cga::motor_t>(dll);
 }
 
 void def_line(py::module &m) {
