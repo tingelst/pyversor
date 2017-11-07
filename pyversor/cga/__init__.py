@@ -10,8 +10,8 @@ from __pyversor__.cga import (
 )
 
 from . import generate
-# from . import operate
-# from . import construct
+from . import operate
+from . import construct
 from . import flats
 from . import rounds
 from . import directions

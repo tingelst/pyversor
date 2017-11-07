@@ -48,10 +48,9 @@ void add_submodule(py::module &m) {
   def_directions(cga);
   def_tangents(cga);
   def_versors(cga);
-
-  // add_construct(cga);
+  def_construct(cga);
   def_generate(cga);
-  // add_operate(cga);
+  def_operate(cga);
 }
 
 } // namespace cga

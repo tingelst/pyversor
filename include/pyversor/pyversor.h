@@ -38,10 +38,12 @@
 #include <versor/space/cga3D_op.h>
 #include <versor/space/cga3D_round.h>
 
+#include <pyversor/construct.h>
 #include <pyversor/directions.h>
 #include <pyversor/flats.h>
 #include <pyversor/generate.h>
 #include <pyversor/multivectors.h>
+#include <pyversor/operate.h>
 #include <pyversor/products.h>
 #include <pyversor/rounds.h>
 #include <pyversor/tangents.h>
@@ -67,39 +69,6 @@ void add_generate(py::module &m);
 namespace cga {
 
 void add_submodule(py::module &m);
-// General multivectors
-void add_vector(py::module &m);
-void add_bivector(py::module &m);
-void add_trivector(py::module &m);
-void add_quadvector(py::module &m);
-void add_pseudoscalar(py::module &m);
-void add_origin(py::module &m);
-void add_infinity(py::module &m);
-void add_multivector(py::module &m);
-// Blades
-// Rounds
-void add_round(py::module &m);
-
-// Flats
-void add_dual_line(py::module &m);
-void add_line(py::module &m);
-void add_dual_plane(py::module &m);
-void add_plane(py::module &m);
-void add_flat_point(py::module &m);
-// Directions
-void add_direction_vector(py::module &m);
-void add_direction_bivector(py::module &m);
-void add_direction_trivector(py::module &m);
-void add_direction_quadvector(py::module &m);
-// Tangents
-
-// Versors
-void add_motor(py::module &m);
-
-void add_flat(py::module &m);
-void add_construct(py::module &m);
-void add_generate(py::module &m);
-void add_operate(py::module &m);
 
 } // namespace cga
 
