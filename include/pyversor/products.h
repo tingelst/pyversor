@@ -18,14 +18,14 @@
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-// ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
@@ -50,6 +50,22 @@ auto def_addition(module_t &m) {
   m.def("__add__", [](const A &lhs, const B &rhs) { return C(lhs + rhs); },
         py::is_operator());
   m.def("__iadd__", [](A &lhs, const B &rhs) { return C(lhs += rhs); },
+        py::is_operator());
+}
+
+template <typename A, typename B, typename module_t>
+auto def_subtraction(module_t &m) {
+  m.def("__sub__", [](const A &lhs, const B &rhs) { return lhs - rhs; },
+        py::is_operator());
+  m.def("__sub__", [](A &lhs, const B &rhs) { return lhs -= rhs; },
+        py::is_operator());
+}
+
+template <typename A, typename B, typename C, typename module_t>
+auto def_subtraction(module_t &m) {
+  m.def("__sub__", [](const A &lhs, const B &rhs) { return C(lhs - rhs); },
+        py::is_operator());
+  m.def("__isub__", [](A &lhs, const B &rhs) { return C(lhs -= rhs); },
         py::is_operator());
 }
 
@@ -104,4 +120,4 @@ auto def_sandwich_product(module_t &m) {
   m.def("spin", [](const A &lhs, const B &rhs) { return C(lhs).spin(rhs); });
 }
 
-}  // namespace pyversor
+} // namespace pyversor

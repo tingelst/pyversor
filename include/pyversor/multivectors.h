@@ -18,14 +18,14 @@
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 // IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-// ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
@@ -40,8 +40,7 @@
 
 namespace pyversor {
 
-template <typename T>
-static constexpr auto estrings() {
+template <typename T> static constexpr auto estrings() {
   auto arr = T::basis::array;
   auto earr = std::array<std::string, arr.size()>{};
   auto size = arr.size();
@@ -62,6 +61,8 @@ py::class_<T> def_multivector(py::module &m, const std::string &name) {
   def_geometric_product<T, double>(t);
   // Addition of same type
   def_addition<T, T>(t);
+  // Subtraction of same type
+  def_subtraction<T, T>(t);
   // Negate
   t.def("__neg__", [](const T &arg) { return -arg; });
   // Reverse
@@ -92,20 +93,20 @@ py::class_<T> def_multivector(py::module &m, const std::string &name) {
   // Grade projection operator
   t.def("grade", [](const T &arg, int grade) {
     switch (grade) {
-      case 0:
-        return T(cga::scalar_t(arg));
-      case 1:
-        return T(cga::vector_t(arg));
-      case 2:
-        return T(cga::bivector_t(arg));
-      case 3:
-        return T(cga::trivector_t(arg));
-      case 4:
-        return T(cga::quadvector_t(arg));
-      case 5:
-        return T(cga::pseudoscalar_t(arg));
-      default:
-        throw std::invalid_argument("Can only project onto grades 0 to 5.");
+    case 0:
+      return T(cga::scalar_t(arg));
+    case 1:
+      return T(cga::vector_t(arg));
+    case 2:
+      return T(cga::bivector_t(arg));
+    case 3:
+      return T(cga::trivector_t(arg));
+    case 4:
+      return T(cga::quadvector_t(arg));
+    case 5:
+      return T(cga::pseudoscalar_t(arg));
+    default:
+      throw std::invalid_argument("Can only project onto grades 0 to 5.");
     };
   });
   // Get scalar coefficient
@@ -142,14 +143,14 @@ py::class_<T> def_multivector(py::module &m, const std::string &name) {
         {static_cast<unsigned long>(arg.Num)}, {sizeof(double)});
   });
   t.def(py::pickle(
-      [](const T &p) {  // __getstate__
+      [](const T &p) { // __getstate__
         std::vector<double> coeffs;
         for (size_t i = 0; i < T::Num; ++i) {
           coeffs.push_back(p[i]);
         }
         return coeffs;
       },
-      [](const std::vector<double> &coeffs) {  // __setstate__
+      [](const std::vector<double> &coeffs) { // __setstate__
         if (coeffs.size() != T::Num) {
           throw std::runtime_error("Invalid state!");
         }
@@ -172,6 +173,6 @@ void def_pseudoscalar(py::module &m);
 void def_infinity(py::module &m);
 void def_origin(py::module &m);
 void def_full_multivector(py::module &m);
-}  // namespace cga
+} // namespace cga
 
-}  // namespace pyversor
+} // namespace pyversor

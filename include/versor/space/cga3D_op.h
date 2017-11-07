@@ -62,29 +62,29 @@ struct Op {
   template <class T> static auto dle(const T &t) { return duale(t); }
   template <class T> static auto udle(const T &t) { return unduale(t); }
 
-  /// Sign of A with Respect to B
+  // Sign of A with Respect to B
   template <class A> static constexpr bool sign(const A &a, const A &b) {
     return (a / b)[0] > 0 ? 1 : 0;
   }
 
-  /// Sign of A with Respect to B (short hand)
+  // Sign of A with Respect to B (short hand)
   template <class A> static constexpr bool sn(const A &a, const A &b) {
     return sign(a, b);
   }
 
-  /// Projection of A onto B
+  // Projection of A onto B
   template <class A, class B>
   static constexpr auto project(const A &a, const B &b) {
     return (a <= b) / b;
   }
 
-  /// Rejection of A from B
+  // Rejection of A from B
   template <class A, class B>
   static constexpr auto reject(const A &a, const B &b) {
-    return (a ^ b) / b;
+    return a - project(a, b);
   }
 
-  /// Shorthand Proj and Rejection
+  // Shorthand Proj and Rejection
   template <class A, class B> static constexpr auto pj(const A &a, const B &b) {
     return project(a, b);
   }
@@ -94,42 +94,38 @@ struct Op {
   }
 };
 
-/**
-* @brief Generators and Logarithms Optimized for 3D Conformal Geometric Algebra
-  @ingroup cgaops
-  @sa vsr::nga::Gen for @ref generic implementation details
-*/
+// Generators and Logarithms Optimized for 3D Conformal Geometric Algebra
 struct Gen {
 
-  /// vsr::cga::Rotor from vsr::cga::Bivector
+  // vsr::cga::Rotor from vsr::cga::Bivector
   static Rot rot(const Biv &b);
-  /// vsr::cga::Rotor from vsr::cga::Bivector
+  // vsr::cga::Rotor from vsr::cga::Bivector
   static Rot rotor(const Biv &b);
-  /// vsr::cga::Boost from vsr::cga::Pair
+  // vsr::cga::Boost from vsr::cga::Pair
   static Bst bst(const Pair &p);
-  /// vsr::cga::Boost from vsr::cga::Pair
+  // vsr::cga::Boost from vsr::cga::Pair
   static Bst boost(const Pair &p);
-  /// vsr::cga::Dilator from vsr::cga::Point and amt t
+  // vsr::cga::Dilator from vsr::cga::Point and amt t
   static Tsd dil(const Pnt &p, VSR_PRECISION t);
-  /// vsr::cga::Dilator from vsr::cga::Point and amt t
+  // vsr::cga::Dilator from vsr::cga::Point and amt t
   static Tsd dilator(const Pnt &p, VSR_PRECISION t);
 
-  /// vsr::cga::Translator from any type
+  // vsr::cga::Translator from any type
   template <class A> static Trs trs(const A &a) { return nga::Gen::trs(a); }
-  /// vsr::cga::Translator from any type
+  // vsr::cga::Translator from any type
   template <class A> static Trs translator(const A &a) {
     return nga::Gen::trs(a);
   }
-  /// vsr::cga::Transversor from any type
+  // vsr::cga::Transversor from any type
   template <class A> static Trv trv(const A &a) { return nga::Gen::trv(a); }
-  /// vsr::cga::Transversor from any type
+  // vsr::cga::Transversor from any type
   template <class A> static Trv transversor(const A &a) {
     return nga::Gen::trv(a);
   }
 
-  /// vsr::cga::Rotor that takes one vec to another
+  // vsr::cga::Rotor that takes one vec to another
   static Rot ratio(const Vec &v, const Vec &v2);
-  /// vsr::cga::Bivector log of vsr::cga::Rotor
+  // vsr::cga::Bivector log of vsr::cga::Rotor
   static Biv log(const Rot &r);
 
   /*! Generate a vsr::cga::Rotor from spherical coordinates
