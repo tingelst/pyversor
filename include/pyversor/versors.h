@@ -45,6 +45,9 @@ void def_translator(py::module &m);
 void def_motor(py::module &m);
 void def_conformal_rotor(py::module &m);
 void def_boost(py::module &m);
+void def_dilator(py::module &m);
+void def_transversor(py::module& m);
+
 
 } // namespace cga
 
