@@ -38,17 +38,23 @@
 #include <versor/space/cga3D_op.h>
 #include <versor/space/cga3D_round.h>
 
-#include <pyversor/construct.h>
-#include <pyversor/directions.h>
-#include <pyversor/flats.h>
-#include <pyversor/generate.h>
+#include <pyversor/c3d/construct.h>
+#include <pyversor/c3d/directions.h>
+#include <pyversor/c3d/flats.h>
+#include <pyversor/c3d/generate.h>
+#include <pyversor/c3d/multivectors.h>
+#include <pyversor/c3d/operate.h>
+#include <pyversor/c3d/rounds.h>
+#include <pyversor/c3d/tangents.h>
+#include <pyversor/c3d/types.h>
+#include <pyversor/c3d/versors.h>
+
+#include <pyversor/c2d/c2d.h>
+
+#include <pyversor/sta/sta.h>
+
 #include <pyversor/multivectors.h>
-#include <pyversor/operate.h>
 #include <pyversor/products.h>
-#include <pyversor/rounds.h>
-#include <pyversor/tangents.h>
-#include <pyversor/types.h>
-#include <pyversor/versors.h>
 
 namespace pyversor {
 
@@ -66,10 +72,10 @@ void add_generate(py::module &m);
 
 } // namespace ega
 
-namespace cga {
+namespace c3d {
 
-void add_submodule(py::module &m);
+void def_submodule(py::module &m);
 
-} // namespace cga
+} // namespace c3d
 
 } // namespace pyversor

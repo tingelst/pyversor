@@ -27,15 +27,24 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <pyversor/pyversor.h>
+#pragma once
+
+#include <pybind11/pybind11.h>
+
+#include <pyversor/c3d/types.h>
+#include <pyversor/multivectors.h>
 
 namespace pyversor {
 
-PYBIND11_MODULE(__pyversor__, m) {
-  // ega::add_submodule(m);
-  c3d::def_submodule(m);
-  c2d::def_submodule(m);
-  sta::def_submodule(m);
-}
+namespace py = pybind11;
+
+namespace c3d {
+
+void def_tangents(py::module &m);
+void def_tangent_vector(py::module &m);
+void def_tangent_bivector(py::module &m);
+void def_tangent_trivector(py::module &m);
+
+} // namespace cga
 
 } // namespace pyversor

@@ -27,15 +27,29 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include <pyversor/sta/sta.h>
 #include <pyversor/pyversor.h>
 
 namespace pyversor {
 
-PYBIND11_MODULE(__pyversor__, m) {
-  // ega::add_submodule(m);
-  c3d::def_submodule(m);
-  c2d::def_submodule(m);
-  sta::def_submodule(m);
+namespace sta {
+
+using sta_t = vsr::algebra<vsr::metric<3, 1, false>, double>;
+
+using multivector_t = vsr::Multivector<
+    sta_t, vsr::Basis<0, 1, 2, 4, 8, 3, 5, 6, 9, 10, 12, 7, 11, 13, 14, 15>>;
+
+void def_submodule(py::module &m) {
+  auto sta = m.def_submodule("sta");
+  auto mv = def_multivector<sta::multivector_t>(sta, "Multivector");
+  mv.def(py::init<double, double, double, double, double, double, double,
+                  double, double, double, double, double, double, double,
+                  double, double>());
+  def_geometric_product<sta::multivector_t, sta::multivector_t>(mv);
+  def_outer_product<sta::multivector_t, sta::multivector_t>(mv);
+  def_inner_product<sta::multivector_t, sta::multivector_t>(mv);
 }
 
-} // namespace pyversor
+}  // namespace sta
+
+}  // namespace pyversor

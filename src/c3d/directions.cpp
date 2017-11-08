@@ -27,15 +27,35 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <pyversor/pyversor.h>
+#include <pyversor/c3d/directions.h>
 
 namespace pyversor {
 
-PYBIND11_MODULE(__pyversor__, m) {
-  // ega::add_submodule(m);
-  c3d::def_submodule(m);
-  c2d::def_submodule(m);
-  sta::def_submodule(m);
+namespace c3d {
+
+void def_directions(py::module &m) {
+  auto dir = m.def_submodule("directions");
+  def_direction_vector(dir);
+  def_direction_bivector(dir);
+  def_direction_trivector(dir);
 }
+
+void def_direction_vector(py::module &m) {
+  auto drv = def_multivector<c3d::direction_vector_t>(m, "DirectionVector");
+  drv.def(py::init<double, double, double>());
+}
+
+void def_direction_bivector(py::module &m) {
+  auto drb = def_multivector<c3d::direction_bivector_t>(m, "DirectionBivector");
+  drb.def(py::init<double, double, double>());
+}
+
+void def_direction_trivector(py::module &m) {
+  auto drt =
+      def_multivector<c3d::direction_trivector_t>(m, "DirectionTrivector");
+  drt.def(py::init<double>());
+}
+
+} // namespace c3d
 
 } // namespace pyversor

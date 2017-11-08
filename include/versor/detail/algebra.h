@@ -319,6 +319,16 @@ template <typename A> struct named_types {
   using rot = typename alg::template sum_basis_t<biv, sca>;
 };
 
+template <typename alg> struct named_types<algebra_impl<alg, false, false>> {
+
+  using pss = Basis<bits::pss(alg::dim)>;
+  using Pss = Multivector<alg, pss>;
+  using euc = pss; // necessary redundancy to avoid errors when compiling
+                   // euclidean duale() method
+  using Euc = Multivector<alg, euc>;
+
+};
+
 /*-----------------------------------------------------------------------------
  *  Default Euclidean Basis Types (specialize named_types to your own needs)
  *-----------------------------------------------------------------------------*/

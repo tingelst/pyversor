@@ -31,11 +31,28 @@
 
 namespace pyversor {
 
-PYBIND11_MODULE(__pyversor__, m) {
-  // ega::add_submodule(m);
-  c3d::def_submodule(m);
-  c2d::def_submodule(m);
-  sta::def_submodule(m);
+namespace c3d {
+
+void def_submodule(py::module &m) {
+  auto c3d = m.def_submodule("c3d");
+  def_vector(c3d);
+  def_bivector(c3d);
+  def_trivector(c3d);
+  def_quadvector(c3d);
+  def_pseudoscalar(c3d);
+  def_infinity(c3d);
+  def_origin(c3d);
+  def_full_multivector(c3d);
+  def_rounds(c3d);
+  def_flats(c3d);
+  def_directions(c3d);
+  def_tangents(c3d);
+  def_versors(c3d);
+  def_construct(c3d);
+  def_generate(c3d);
+  def_operate(c3d);
 }
+
+} // namespace cga
 
 } // namespace pyversor
