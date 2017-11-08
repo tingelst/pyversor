@@ -6,3 +6,6 @@ build
 .vscode
 __pycache__
 .DS_Store
+*.so
+notebooks
+*.egg-info

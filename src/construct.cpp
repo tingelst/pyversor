@@ -27,13 +27,23 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <pyversor/pyversor.h>
+#include <pyversor/construct.h>
 
 namespace pyversor {
 
-PYBIND11_MODULE(__pyversor__, m) {
-  // ega::add_submodule(m);
-  cga::add_submodule(m);
+namespace cga {
+
+void def_construct(py::module &m) {
+  using vsr::cga::Construct;
+  auto construct = m.def_submodule("construct");
+  construct.def("sphere", [](const cga::point_t &p, double r) {
+    return Construct::sphere(p, r);
+  });
+  construct.def("meet", [](const cga::vector_t &p, const cga::vector_t &q) {
+    return Construct::meet(p, q);
+  });
 }
+
+} // namespace cga
 
 } // namespace pyversor

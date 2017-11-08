@@ -27,13 +27,18 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <pyversor/pyversor.h>
+#include <pyversor/operate.h>
 
 namespace pyversor {
 
-PYBIND11_MODULE(__pyversor__, m) {
-  // ega::add_submodule(m);
-  cga::add_submodule(m);
+namespace cga {
+
+void def_operate(py::module &m) {
+  using vsr::cga::Op;
+  auto operate = m.def_submodule("operate");
+  operate.def("axis_angle", [](const cga::circle_t &c) { return Op::AA(c); });
 }
+
+} // namespace cga
 
 } // namespace pyversor

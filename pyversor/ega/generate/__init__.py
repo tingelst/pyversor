@@ -1,1 +1,1 @@
-from __pyversor__.ega.generate import *
+# from __pyversor__.ega.generate import *
