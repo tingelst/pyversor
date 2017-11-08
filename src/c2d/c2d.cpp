@@ -27,15 +27,29 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include <pyversor/c2d/c2d.h>
 #include <pyversor/pyversor.h>
 
 namespace pyversor {
 
-PYBIND11_MODULE(__pyversor__, m) {
-  // ega::add_submodule(m);
-  c3d::def_submodule(m);
-  c2d::def_submodule(m);
-  sta::def_submodule(m);
+namespace c2d {
+
+using c2d_t = vsr::algebra<vsr::metric<3, 1, true>, double>;
+
+using multivector_t = vsr::Multivector<
+    c2d_t, vsr::Basis<0, 1, 2, 4, 8, 3, 5, 6, 9, 10, 12, 7, 11, 13, 14, 15>>;
+
+void def_submodule(py::module &m) {
+  auto c2d = m.def_submodule("c2d");
+  auto mv = def_multivector<c2d::multivector_t>(c2d, "Multivector");
+  mv.def(py::init<double, double, double, double, double, double, double,
+                  double, double, double, double, double, double, double,
+                  double, double>());
+  def_geometric_product<c2d::multivector_t, c2d::multivector_t>(mv);
+  def_outer_product<c2d::multivector_t, c2d::multivector_t>(mv);
+  def_inner_product<c2d::multivector_t, c2d::multivector_t>(mv);
 }
 
-} // namespace pyversor
+}  // namespace c2d
+
+}  // namespace pyversor

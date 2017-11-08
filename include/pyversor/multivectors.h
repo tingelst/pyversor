@@ -35,8 +35,9 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
+#include <versor/detail/multivector.h>
+
 #include <pyversor/products.h>
-#include <pyversor/types.h>
 
 namespace pyversor {
 
@@ -91,24 +92,24 @@ py::class_<T> def_multivector(py::module &m, const std::string &name) {
   t.def("runit", &T::runit);
   t.def("tunit", &T::tunit);
   // Grade projection operator
-  t.def("grade", [](const T &arg, int grade) {
-    switch (grade) {
-    case 0:
-      return T(cga::scalar_t(arg));
-    case 1:
-      return T(cga::vector_t(arg));
-    case 2:
-      return T(cga::bivector_t(arg));
-    case 3:
-      return T(cga::trivector_t(arg));
-    case 4:
-      return T(cga::quadvector_t(arg));
-    case 5:
-      return T(cga::pseudoscalar_t(arg));
-    default:
-      throw std::invalid_argument("Can only project onto grades 0 to 5.");
-    };
-  });
+  // t.def("grade", [](const T &arg, int grade) {
+  //   switch (grade) {
+  //   case 0:
+  //     return T(cga::scalar_t(arg));
+  //   case 1:
+  //     return T(cga::vector_t(arg));
+  //   case 2:
+  //     return T(cga::bivector_t(arg));
+  //   case 3:
+  //     return T(cga::trivector_t(arg));
+  //   case 4:
+  //     return T(cga::quadvector_t(arg));
+  //   case 5:
+  //     return T(cga::pseudoscalar_t(arg));
+  //   default:
+  //     throw std::invalid_argument("Can only project onto grades 0 to 5.");
+  //   };
+  // });
   // Get scalar coefficient
   t.def("__getitem__", [](T &arg, int idx) { return arg[idx]; });
   // Set scalar coefficient
@@ -163,16 +164,5 @@ py::class_<T> def_multivector(py::module &m, const std::string &name) {
       }));
   return t;
 }
-
-namespace cga {
-void def_vector(py::module &m);
-void def_bivector(py::module &m);
-void def_trivector(py::module &m);
-void def_quadvector(py::module &m);
-void def_pseudoscalar(py::module &m);
-void def_infinity(py::module &m);
-void def_origin(py::module &m);
-void def_full_multivector(py::module &m);
-} // namespace cga
 
 } // namespace pyversor
