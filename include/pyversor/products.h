@@ -71,10 +71,8 @@ auto def_subtraction(module_t &m) {
 
 template <typename A, typename B, typename module_t>
 auto def_outer_product(module_t &m) {
-  m.def("__xor__", [](const A &lhs, const B &rhs) { return lhs ^ rhs; },
-        py::is_operator());
-  m.def("outer", [](const A &lhs, const B &rhs) { return lhs ^ rhs; },
-        py::is_operator());
+  m.def("__xor__", [](const A &lhs, const B &rhs) { return lhs ^ rhs; });
+  m.def("outer", [](const A &lhs, const B &rhs) { return lhs ^ rhs; });
 }
 
 template <typename A, typename B, typename module_t>

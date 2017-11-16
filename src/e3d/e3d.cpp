@@ -33,63 +33,46 @@ namespace pyversor {
 
 namespace e3d {
 
-void add_submodule(py::module &m) {
+void def_submodule(py::module &m) {
   auto ega = m.def_submodule("e3d");
-  // add_vector(ega);
-  // add_bivector(ega);
-  // add_trivector(ega);
-  // add_rotator(ega);
-  // add_multivector(ega);
-  // add_generate(ega);
+  def_vector(ega);
+  def_bivector(ega);
+  def_trivector(ega);
+  def_rotator(ega);
+  def_full_multivector(ega);
 }
 
-void add_vector(py::module &m) {
-  auto t = add_euclidean_multivector<vector_t>(m, "Vector");
-  t.def(py::init<double, double, double>());
-  t.def("null", &vector_t::null);
-  outer_product<vector_t>::add<vector_t, bivector_t>(t);
+void def_vector(py::module &m) {
+  auto vec = def_multivector<e3d::vector_t>(m, "Vector");
+  vec.def(py::init<double, double, double>());
+  def_geometric_product<e3d::vector_t, e3d::vector_t>(vec);
+  def_outer_product<e3d::vector_t, e3d::vector_t>(vec);
 }
 
-void add_bivector(py::module &m) {
-  using vsr::nga::Gen;
-  add_euclidean_multivector<bivector_t>(m, "Bivector")
-      .def(py::init<double, double, double>())
-      .def("__add__",
-           [](const bivector_t &a, double b) { return rotator_t(a + b); })
-      .def("__radd__",
-           [](const bivector_t &a, double b) { return rotator_t(a + b); })
-      .def("exp", [](const bivector_t &b) { return Gen::rot(b); });
+void def_bivector(py::module &m) {
+  auto biv = def_multivector<e3d::bivector_t>(m, "Bivector");
+  biv.def(py::init<double, double, double>());
+  def_geometric_product<e3d::bivector_t, e3d::bivector_t>(biv);
 }
 
-void add_trivector(py::module &m) {
-  add_euclidean_multivector<trivector_t>(m, "Trivector")
-      .def(py::init<double>());
+void def_trivector(py::module &m) {
+  auto tri = def_multivector<e3d::trivector_t>(m, "Trivector");
+  tri.def(py::init<double>());
 }
 
-void add_rotator(py::module &m) {
-  using vsr::nga::Gen;
-  add_euclidean_multivector<rotator_t>(m, "Rotator")
-      .def(py::init<double, double, double, double>())
-      .def("log", [](const rotator_t &m) { return Gen::log(m); });
+void def_rotator(py::module &m) {
+  auto rot = def_multivector<e3d::rotator_t>(m, "Rotator");
+  rot.def(py::init<double, double, double, double>());
 }
 
-void add_multivector(py::module &m) {
-  add_euclidean_multivector<multivector_t>(m, "Multivector")
-      .def(py::init<>())
-      .def(py::init<double, double, double, double, double, double, double,
-                    double>());
+void def_full_multivector(py::module &m) {
+  auto mv = def_multivector<e3d::multivector_t>(m, "Multivector");
+  mv.def(py::init<double, double, double, double, double, double, double,
+                  double>());
+  def_geometric_product<e3d::multivector_t, e3d::multivector_t>(mv);
+  def_outer_product<e3d::multivector_t, e3d::multivector_t>(mv);
 }
 
-void add_generate(py::module &m) {
-  using vsr::nga::Gen;
-  auto generate = m.def_submodule("generate");
-  generate.def("ratio", [](const vector_t &a, const vector_t &b) {
-    return vsr::nga::Gen::ratio(a, b);
-  });
-  generate.def("log", [](const rotator_t &m) { return Gen::log(m); });
-  generate.def("exp", [](const bivector_t &b) { return Gen::rot(b); });
-}
-
-} // namespace ega
+} // namespace e3d
 
 } // namespace pyversor

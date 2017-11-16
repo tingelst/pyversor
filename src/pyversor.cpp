@@ -33,6 +33,7 @@ namespace pyversor {
 
 PYBIND11_MODULE(__pyversor__, m) {
   // ega::add_submodule(m);
+  e3d::def_submodule(m);
   c3d::def_submodule(m);
   c2d::def_submodule(m);
   sta::def_submodule(m);

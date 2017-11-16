@@ -9,3 +9,5 @@ __pycache__
 *.so
 notebooks
 *.egg-info
+.idea
+cmake-build-debug

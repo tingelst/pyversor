@@ -38,6 +38,8 @@
 #include <versor/space/cga3D_op.h>
 #include <versor/space/cga3D_round.h>
 
+#include <pyversor/e3d/e3d.h>
+
 #include <pyversor/c3d/construct.h>
 #include <pyversor/c3d/directions.h>
 #include <pyversor/c3d/flats.h>

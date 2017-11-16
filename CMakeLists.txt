@@ -16,7 +16,7 @@ add_subdirectory(pybind11)
 
 pybind11_add_module(__pyversor__
   src/pyversor.cpp
-  #src/pyversor_ega.cpp
+  src/e3d/e3d.cpp
   src/c3d/c3d.cpp
   src/c3d/rounds.cpp
   src/c3d/flats.cpp
