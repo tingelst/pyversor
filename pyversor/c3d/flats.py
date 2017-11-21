@@ -28,4 +28,5 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """Operations on flat geometric objects in 3D conformal geometric algebra."""
 
-from __pyversor__.c3d.flats import (DualLine, Line, DualPlane, Plane)
+from __pyversor__.c3d.flats import (
+    DualLine, Line, DualPlane, Plane, FlatPoint)

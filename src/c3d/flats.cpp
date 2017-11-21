@@ -44,9 +44,14 @@ void def_flats(py::module &m) {
 
 void def_flat_point(py::module &m) {
   auto flp = def_multivector<c3d::flat_point_t>(m, "FlatPoint");
+  flp.def(py::init<double, double, double, double>());
   flp.def(py::init([](const c3d::point_t &p) {
     return new c3d::flat_point_t(p.null() ^ c3d::infinity_t(1.0));
   }));
+  flp.def("spinv", [](const c3d::flat_point_t &p, const c3d::motor_t &m) {
+    return c3d::flat_point_t(m * p * !m);
+  });
+  def_sandwich_product<c3d::flat_point_t, c3d::motor_t>(flp);
   //   def_geometric_product<c3d::flat_point_t, c3d::flat_point_t>(flp);
 }
 
@@ -56,6 +61,7 @@ void def_dual_line(py::module &m) {
   def_geometric_product<c3d::dual_line_t, c3d::dual_line_t>(dll);
   def_geometric_product<c3d::dual_line_t, c3d::motor_t>(dll);
   def_addition<c3d::dual_line_t, c3d::motor_t>(dll);
+  def_sandwich_product<c3d::dual_line_t, c3d::motor_t>(dll);
 }
 
 void def_line(py::module &m) {
@@ -65,6 +71,7 @@ void def_line(py::module &m) {
     return new c3d::line_t(p.null() ^ q.null() ^ c3d::infinity_t(1.0));
   }));
   def_geometric_product<c3d::line_t, c3d::line_t>(lin);
+  def_sandwich_product<c3d::line_t, c3d::motor_t>(lin);
 }
 
 void def_dual_plane(py::module &m) {

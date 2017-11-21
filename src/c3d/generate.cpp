@@ -58,6 +58,13 @@ void def_generate(py::module &m) {
                [](const c3d::direction_vector_t &v) { return Gen::trs(v); });
   generate.def("exp", [](const c3d::dual_line_t &b) { return Gen::mot(b); });
   generate.def("exp", [](const c3d::bivector_t &b) { return exp(b); });
+  generate.def("expo", [](const c3d::dual_line_t &b) -> c3d::motor_t {
+    c3d::motor_t bb = b * b * 0.5;
+    c3d::motor_t m = b;
+    m[0] = 1.0;
+    m[7] = bb[7];
+    return m;
+  });
   generate.def("outer_exp", [](const c3d::dual_line_t &b) {
     return Gen::outer_exponential(b);
   });
