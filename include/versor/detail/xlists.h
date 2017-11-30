@@ -41,11 +41,11 @@ using namespace std;
 
 namespace vsr { // detail?
 
-#define CA constexpr auto
-#define SCA static constexpr auto
-#define SC static constexpr
-#define RETURNS(X)                                                             \
-  ->decltype(X) { return X; }
+// #define CA constexpr auto
+// #define SCA static constexpr auto
+// #define SC static constexpr
+// #define RETURNS(X)                                                             \
+//   ->decltype(X) { return X; }
 
 /*-----------------------------------------------------------------------------
  *  EMPTY Basis
@@ -269,12 +269,17 @@ template <int N> constexpr bits::type bit() { return 1 << N; }
  * MAKE AN ND VEC
  *-----------------------------------------------------------------------------*/
 template <bits::type TOT, bits::type DIM = TOT> struct Blade1 {
-  static constexpr auto Vec()
-      RETURNS(cat(Basis<bit<(TOT - DIM)>()>(),
-                  Blade1<TOT, DIM - 1>::Vec())) typedef decltype(Vec()) VEC;
+  static constexpr auto Vec() 
+  {
+    return cat(Basis<bit<(TOT - DIM)>()>(), Blade1<TOT, DIM - 1>::Vec());
+  }
+  
+  typedef decltype(Vec()) VEC;
 };
 template <bits::type TOT> struct Blade1<TOT, 0> {
-  static constexpr auto Vec() RETURNS(Basis<>())
+  static constexpr auto Vec() {
+    return Basis<>();
+  } 
 };
 
 /*-----------------------------------------------------------------------------

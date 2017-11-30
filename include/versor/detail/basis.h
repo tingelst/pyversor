@@ -61,7 +61,7 @@ inline void bsprint(int x) { printf("%s\n", bitString<6>(x).c_str()); }
 // Convert blade to "e1.." string
 inline string estring(int x) {
   if (x == 0) {
-    return "s";
+    return "";
   }
   stringstream s;
   s << "e";

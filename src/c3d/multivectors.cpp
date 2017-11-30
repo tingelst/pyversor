@@ -38,6 +38,10 @@ void def_vector(py::module &m) {
   auto vec = def_multivector<c3d::vector_t>(m, "Vector");
   vec.def(py::init<double, double, double, double, double>());
   def_geometric_product<c3d::vector_t, c3d::vector_t>(vec);
+  def_geometric_product<c3d::vector_t, c3d::bivector_t>(vec);
+  def_inner_product<c3d::vector_t, c3d::vector_t>(vec);
+  def_inner_product<c3d::vector_t, c3d::bivector_t>(vec);
+  def_sandwich_product<c3d::vector_t, c3d::motor_t>(vec);
 }
 
 void def_bivector(py::module &m) {
@@ -79,13 +83,29 @@ void def_origin(py::module &m) {
 }
 
 void def_full_multivector(py::module &m) {
-  def_multivector<multivector_t>(m, "Multivector")
-      .def(py::init<>())
-      .def(py::init<double, double, double, double, double, double, double,
-                    double, double, double, double, double, double, double,
-                    double, double, double, double, double, double, double,
-                    double, double, double, double, double, double, double,
-                    double, double, double, double>());
+  auto mv = def_multivector<multivector_t>(m, "Multivector");
+  mv.def(py::init<>());
+  mv.def(py::init<c3d::vector_t>());
+  mv.def(py::init<c3d::bivector_t>());
+  mv.def(py::init<c3d::trivector_t>());
+  mv.def(py::init<c3d::quadvector_t>());
+  mv.def(py::init<c3d::pseudoscalar_t>());
+  mv.def(py::init<double, double, double, double, double, double, double,
+                  double, double, double, double, double, double, double,
+                  double, double, double, double, double, double, double,
+                  double, double, double, double, double, double, double,
+                  double, double, double, double>());
+
+  def_scalar_addition<c3d::multivector_t>(mv);
+  def_geometric_product<c3d::multivector_t, c3d::multivector_t>(mv);
+  def_outer_product<c3d::multivector_t, c3d::multivector_t>(mv);
+  def_inner_product<c3d::multivector_t, c3d::multivector_t>(mv);
+  // Division
+  mv.def("__truediv__",
+         [](const c3d::multivector_t &lhs, const c3d::multivector_t &rhs) {
+           return lhs / rhs;
+         },
+         py::is_operator());
 }
 
 } // namespace c3d

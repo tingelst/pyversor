@@ -45,6 +45,13 @@ auto def_addition(module_t &m) {
         py::is_operator());
 }
 
+template <typename A, typename module_t> auto def_scalar_addition(module_t &m) {
+  m.def("__add__", [](const A &lhs, double rhs) { return lhs + rhs; },
+        py::is_operator());
+  m.def("__radd__", [](const A &lhs, double rhs) { return lhs + rhs; },
+        py::is_operator());
+}
+
 template <typename A, typename B, typename C, typename module_t>
 auto def_addition(module_t &m) {
   m.def("__add__", [](const A &lhs, const B &rhs) { return C(lhs + rhs); },

@@ -204,7 +204,7 @@ struct Gen {
 
     if (n <= 0) {
       if (t < 0) {
-        return TBiv(PI);
+        return TBiv(VSR_PI);
       } else {
         return TBiv();
       }
@@ -270,7 +270,7 @@ struct Gen {
     using TVec = GAVec<A>;
 
     TVec v = Op::dle(pl(r));
-    VSR_PRECISION deg = iphi(r) * (-180 / PI);
+    VSR_PRECISION deg = iphi(r) * (-180 / VSR_PI);
 
     return TRot(deg, v[0], v[1], v[2]);
   }

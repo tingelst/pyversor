@@ -14,6 +14,11 @@ include_directories(
 
 add_subdirectory(pybind11)
 
+add_library(versor SHARED
+  src/c3d/vsr_cga3D_op.cpp
+  src/c3d/vsr_cga3D_round.cpp
+)
+
 pybind11_add_module(__pyversor__
   src/pyversor.cpp
   src/e3d/e3d.cpp
@@ -31,4 +36,5 @@ pybind11_add_module(__pyversor__
   src/c3d/vsr_cga3D_round.cpp
   src/c2d/c2d.cpp
   src/sta/sta.cpp
+  src/e41/e41.cpp
 )

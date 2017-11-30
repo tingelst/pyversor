@@ -32,8 +32,8 @@
 
 namespace vsr {
 
-#ifndef PI
-#define PI 3.141592653589793
+#ifndef VSR_PI
+#define VSR_PI 3.141592653589793
 #endif
 
 #ifndef TWOPI

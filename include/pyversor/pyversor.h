@@ -53,6 +53,8 @@
 
 #include <pyversor/c2d/c2d.h>
 
+#include <pyversor/e41/e41.h>
+
 #include <pyversor/sta/sta.h>
 
 #include <pyversor/multivectors.h>

@@ -562,7 +562,7 @@ const auto pointsOnSphere = [](const DualSphere &s, int u, int v) {
     for (int j = 0; j < v; ++j) {
 
       float tu = TWOPI * i / u; //-1 + 2.0 * i/num;
-      float tv = -PIOVERTWO + PI * j / v;
+      float tv = -PIOVERTWO + VSR_PI * j / v;
 
       out.push_back(pointOnSphere(s, tu, tv));
     }
@@ -597,9 +597,9 @@ Multivector<Algebra, B>::twist(const Multivector<Algebra, A> &t) const {
     @ingroup cgaops
   * @{ */
 
-#define E1 e1(1)
-#define E2 e2(1)
-#define E3 e3(1)
+// #define E1 e1(1)
+// #define E2 e2(1)
+// #define E3 e3(1)
 
 /// A vsr::cga::Point at coordinates x,y,z
 #define PT(x, y, z) vsr::cga::Round::null(vsr::cga::Vec(x, y, z))

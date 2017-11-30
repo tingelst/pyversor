@@ -76,14 +76,25 @@ struct Multivector {
       typename algebra::template make_gp<Basis<bits::pss(algebra::dim - 2)>,
                                          basis>;
 
-  // data array
-  value_t val[Num];
+ static constexpr auto basis_blades() {
+  auto arr = basis::array;
+  auto earr = std::array<std::string, arr.size()>{};
+  auto size = arr.size();
+  for (int i = 0; i < arr.size(); ++i) {
+    earr[i] = vsr::bits::estring(arr[i]);
+  }
+  return earr;
+}
 
-  // data array type
-  typedef const value_t array_type[Num];
+  std::array<value_t, Num> val;
+  // // data array
+  // value_t val[Num];
+
+  // // data array type
+  // typedef const value_t array_type[Num];
 
   // pointer to first data
-  array_type &begin() const { return val; }
+  // array_type &begin() const { return val; }
 
   // get value at idx
   constexpr value_t operator[](int idx) const { return val[idx]; }
@@ -391,12 +402,32 @@ struct Multivector {
   static Multivector x, y, z, xy, xz, yz;
 
   friend ostream &operator<<(ostream &os, const Multivector &m) {
+    auto blades = basis_blades();
     for (int i = 0; i < Num; ++i) {
-      os << m[i] << " ";  // std::endl;
+      if (abs(m[i]) > 1e-6)
+      {
+        os << m[i] << blades[i] << " ";  // std::endl;
+      }
     }
     return os;
   }
 };
+
+template <typename Algebra, typename Basis>
+auto inline operator+(double lhs, const Multivector<Algebra, Basis>& rhs) {
+  return rhs + lhs;
+}
+
+template <typename Algebra, typename Basis>
+auto inline operator-(double lhs, const Multivector<Algebra, Basis>& rhs) {
+  return -rhs + lhs;
+}
+
+template <typename Algebra, typename Basis>
+auto inline operator*(double lhs, const Multivector<Algebra, Basis>& rhs) {
+  return rhs * lhs;
+}
+
 
 // conversions (casting, copying)
 
